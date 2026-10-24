@@ -1,175 +1,194 @@
 <title>今天吃什么</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
-/* Layout: iOS-style single column — large title, inset cards, floating glass tab bar + add button, bottom sheets, full-screen unlock moment */
+/* Layout: iOS liquid-glass single column — drifting color field behind translucent cards, large title, floating glass tab bar + add button, glass bottom sheets, hold-to-unlock moment */
 :root {
-  --bg: #F2F2F7;
-  --card: #FFFFFF;
-  --fill: rgba(118,118,128,.12);
-  --label: #000000;
-  --label2: rgba(60,60,67,.62);
-  --label3: rgba(60,60,67,.3);
-  --sep: rgba(60,60,67,.18);
-  --accent: #F2355B;
-  --accent-soft: rgba(242,53,91,.12);
-  --gold: #E8A10C;
-  --red: #E5352B;
-  --green: #24A148;
-  --glass: rgba(255,255,255,.72);
-  --glass-edge: rgba(255,255,255,.9);
-  --shadow: 0 8px 30px rgba(0,0,0,.10), 0 1px 3px rgba(0,0,0,.06);
-  --scrim: rgba(0,0,0,.3);
+  --base: #F3ECF1;
+  --blob1: #FF9EB8; --blob2: #FFC98F; --blob3: #B8A6FF; --blob4: #8EE2CC;
+  --glass: rgba(255,255,255,.52);
+  --glass-strong: rgba(255,255,255,.78);
+  --glass-edge: rgba(255,255,255,.75);
+  --glass-hi: rgba(255,255,255,.95);
+  --shade: rgba(80,40,70,.12);
+  --fill: rgba(120,120,128,.14);
+  --label: #1A1220;
+  --label2: rgba(40,28,48,.62);
+  --label3: rgba(40,28,48,.3);
+  --sep: rgba(60,40,70,.12);
+  --accent: #EE2F5B;
+  --accent-soft: rgba(238,47,91,.13);
+  --gold: #E59B00;
+  --red: #E5352B; --yellow: #F2B705; --green: #22A04B;
+  --scrim: rgba(30,10,30,.22);
   --c-zh: #E5484D; --c-cha: #C27A2C; --c-xi: #3E7BFA; --c-th: #2FA35B;
   --c-jp: #E2557F; --c-kr: #8E5BE0; --c-fast: #F08C1A; --c-other: #6E7380;
   --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
   --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", system-ui, sans-serif;
-  --r-card: 22px;
+  --r-card: 26px;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #000000; --card: #1C1C1E; --fill: rgba(118,118,128,.24);
-  --label: #FFFFFF; --label2: rgba(235,235,245,.62); --label3: rgba(235,235,245,.3); --sep: rgba(84,84,88,.55);
-  --accent: #FF4F72; --accent-soft: rgba(255,79,114,.18); --gold: #FFC23D; --red: #FF5A50; --green: #3DD26A;
-  --glass: rgba(44,44,48,.66); --glass-edge: rgba(255,255,255,.14);
-  --shadow: 0 8px 30px rgba(0,0,0,.5), 0 1px 3px rgba(0,0,0,.4); --scrim: rgba(0,0,0,.6);
+  --base: #0A080E;
+  --blob1: #8A1E4A; --blob2: #7A4012; --blob3: #3B2A8F; --blob4: #0E5E4E;
+  --glass: rgba(38,36,46,.5); --glass-strong: rgba(40,38,48,.82); --glass-edge: rgba(255,255,255,.13); --glass-hi: rgba(255,255,255,.22);
+  --shade: rgba(0,0,0,.45); --fill: rgba(140,140,150,.2);
+  --label: #FFFFFF; --label2: rgba(240,235,245,.64); --label3: rgba(240,235,245,.3); --sep: rgba(255,255,255,.1);
+  --accent: #FF5479; --accent-soft: rgba(255,84,121,.2); --gold: #FFC23D;
+  --red: #FF5A50; --yellow: #FFD23F; --green: #3DD26A; --scrim: rgba(0,0,0,.5);
   --c-zh: #FF6369; --c-cha: #E09A4E; --c-xi: #6B9BFF; --c-th: #4CC277;
   --c-jp: #FF7BA1; --c-kr: #AD83FF; --c-fast: #FFA640; --c-other: #9AA0AD;
   color-scheme: dark;
 } }
 :root[data-theme="dark"] {
-  --bg: #000000; --card: #1C1C1E; --fill: rgba(118,118,128,.24);
-  --label: #FFFFFF; --label2: rgba(235,235,245,.62); --label3: rgba(235,235,245,.3); --sep: rgba(84,84,88,.55);
-  --accent: #FF4F72; --accent-soft: rgba(255,79,114,.18); --gold: #FFC23D; --red: #FF5A50; --green: #3DD26A;
-  --glass: rgba(44,44,48,.66); --glass-edge: rgba(255,255,255,.14);
-  --shadow: 0 8px 30px rgba(0,0,0,.5), 0 1px 3px rgba(0,0,0,.4); --scrim: rgba(0,0,0,.6);
+  --base: #0A080E;
+  --blob1: #8A1E4A; --blob2: #7A4012; --blob3: #3B2A8F; --blob4: #0E5E4E;
+  --glass: rgba(38,36,46,.5); --glass-strong: rgba(40,38,48,.82); --glass-edge: rgba(255,255,255,.13); --glass-hi: rgba(255,255,255,.22);
+  --shade: rgba(0,0,0,.45); --fill: rgba(140,140,150,.2);
+  --label: #FFFFFF; --label2: rgba(240,235,245,.64); --label3: rgba(240,235,245,.3); --sep: rgba(255,255,255,.1);
+  --accent: #FF5479; --accent-soft: rgba(255,84,121,.2); --gold: #FFC23D;
+  --red: #FF5A50; --yellow: #FFD23F; --green: #3DD26A; --scrim: rgba(0,0,0,.5);
   --c-zh: #FF6369; --c-cha: #E09A4E; --c-xi: #6B9BFF; --c-th: #4CC277;
   --c-jp: #FF7BA1; --c-kr: #AD83FF; --c-fast: #FFA640; --c-other: #9AA0AD;
   color-scheme: dark;
 }
 [hidden] { display: none !important; }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { background: var(--bg); color: var(--label); }
+html, body { background: var(--base); color: var(--label); }
 body { font-family: var(--font); font-size: 16px; line-height: 1.4; -webkit-font-smoothing: antialiased; }
 button, input { font: inherit; color: inherit; }
 button { cursor: pointer; border: 0; background: none; padding: 0; }
-:focus-visible { outline: 2.5px solid var(--accent); outline-offset: 2px; border-radius: 10px; }
+:focus-visible { outline: 2.5px solid var(--accent); outline-offset: 2px; border-radius: 12px; }
+
+/* Color field behind the glass */
+.field-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: var(--base); }
+.field-bg i { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .85; }
+.field-bg i:nth-child(1) { width: 70vmax; height: 70vmax; left: -25vmax; top: -20vmax; background: var(--blob1); animation: drift1 26s ease-in-out infinite alternate; }
+.field-bg i:nth-child(2) { width: 55vmax; height: 55vmax; right: -22vmax; top: 10vh; background: var(--blob2); animation: drift2 31s ease-in-out infinite alternate; }
+.field-bg i:nth-child(3) { width: 60vmax; height: 60vmax; left: -10vmax; bottom: -30vmax; background: var(--blob3); animation: drift3 29s ease-in-out infinite alternate; }
+.field-bg i:nth-child(4) { width: 40vmax; height: 40vmax; right: -10vmax; bottom: -5vmax; background: var(--blob4); animation: drift1 35s ease-in-out infinite alternate-reverse; }
+@keyframes drift1 { to { transform: translate(12vmax, 8vmax) scale(1.1); } }
+@keyframes drift2 { to { transform: translate(-10vmax, 14vmax) scale(.9); } }
+@keyframes drift3 { to { transform: translate(14vmax, -10vmax) scale(1.08); } }
+
+/* Glass material */
+.glass, .card {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(28px) saturate(185%); backdrop-filter: blur(28px) saturate(185%);
+  box-shadow: inset 0 1px 0 var(--glass-hi), inset 0 0 0 .5px var(--glass-edge), 0 10px 30px var(--shade);
+}
+.card { border-radius: var(--r-card); }
 
 .wrap {
-  max-width: 640px; margin: 0 auto;
+  position: relative; z-index: 1; max-width: 640px; margin: 0 auto;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: 18px 140px;
+  padding-block: 18px 150px;
   display: flex; flex-direction: column; gap: 20px;
 }
 .top { display: flex; flex-direction: column; gap: 2px; padding-top: 18px; }
 .eyebrow { font-size: 13px; font-weight: 600; color: var(--accent); letter-spacing: .02em; }
-h1 { font-family: var(--font-display); font-size: 34px; line-height: 1.12; font-weight: 700; letter-spacing: -.02em; margin: 0; }
-h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
+h1 { font-family: var(--font-display); font-size: 36px; line-height: 1.1; font-weight: 800; letter-spacing: -.025em; margin: 0; }
+h2 { font-size: 21px; font-weight: 700; margin: 0; letter-spacing: -.015em; }
 .stack { display: flex; flex-direction: column; gap: 20px; }
-.sec-h { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 0 4px; margin-bottom: -10px; }
+.sec-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 4px; margin-bottom: -8px; }
 .sec-h span { font-size: 13px; color: var(--label2); font-variant-numeric: tabular-nums; }
 .muted { color: var(--label2); font-size: 14px; }
-.card { background: var(--card); border-radius: var(--r-card); }
-.pad { padding: 16px; }
-.banner { background: var(--accent-soft); border-radius: 16px; padding: 12px 14px; font-size: 14px; }
+.banner { border-radius: 18px; padding: 12px 14px; font-size: 14px; }
+.mini {
+  height: 32px; padding: 0 13px; border-radius: 99px; font-size: 14px; font-weight: 600; color: var(--accent);
+  display: inline-flex; align-items: center; gap: 4px; flex: none;
+}
 
 /* Segmented + chips */
-.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--fill); border-radius: 12px; padding: 3px; gap: 2px; }
-.seg button { height: 32px; border-radius: 9px; font-size: 14px; font-weight: 500; padding: 0 6px; white-space: nowrap; }
-.seg button[aria-pressed="true"] { background: var(--card); box-shadow: 0 2px 8px rgba(0,0,0,.12); font-weight: 600; }
-.chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 2px 16px; }
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--fill); border-radius: 14px; padding: 3px; gap: 2px; }
+.seg button { height: 34px; border-radius: 11px; font-size: 14px; font-weight: 500; padding: 0 6px; white-space: nowrap; transition: background .2s, box-shadow .2s; }
+.seg button[aria-pressed="true"] { background: var(--glass-strong); box-shadow: 0 2px 10px var(--shade), inset 0 0 0 .5px var(--glass-edge); font-weight: 650; }
+.chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: -4px -16px; padding: 4px 16px 8px; }
 .chips::-webkit-scrollbar { display: none; }
-.chip { flex: none; height: 34px; padding: 0 14px; border-radius: 99px; background: var(--card); font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
-.chip[aria-pressed="true"] { background: var(--label); color: var(--bg); }
-.chip.wrap-ok { flex: 0 1 auto; }
+.chip { flex: none; height: 36px; padding: 0 14px; border-radius: 99px; font-size: 14px; font-weight: 550; display: inline-flex; align-items: center; gap: 6px; }
+.chip[aria-pressed="true"] { background: var(--label); color: var(--base); box-shadow: 0 6px 16px var(--shade); }
 .chipgrid { display: flex; flex-wrap: wrap; gap: 8px; }
 .chipgrid .chip { background: var(--fill); }
-.chipgrid .chip[aria-pressed="true"] { background: var(--label); color: var(--bg); }
+.chipgrid .chip[aria-pressed="true"] { background: var(--label); color: var(--base); }
 
-/* Today */
-.today-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; width: 100%; text-align: left; position: relative; }
-.today-row + .today-row::before { content: ""; position: absolute; top: 0; left: 64px; right: 0; border-top: .5px solid var(--sep); }
-.ico { flex: none; width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; font-size: 19px; background: color-mix(in srgb, var(--cat, var(--c-other)) 16%, transparent); }
-.row-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
-.row-main b { font-weight: 600; font-size: 16px; overflow-wrap: anywhere; }
-.row-main small { color: var(--label2); font-size: 13px; }
-.slot { flex: none; font-size: 12px; font-weight: 600; color: var(--label2); background: var(--fill); padding: 3px 8px; border-radius: 99px; }
-.add-row { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: var(--accent); font-weight: 600; width: 100%; }
+/* Rows */
+.list { overflow: hidden; }
+.row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; width: 100%; text-align: left; position: relative; }
+.row + .row::before, .row + .add-row::before { content: ""; position: absolute; top: 0; left: 64px; right: 0; border-top: .5px solid var(--sep); }
+button.row:active { background: var(--fill); }
+.ico { flex: none; width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; font-size: 20px; background: color-mix(in srgb, var(--cat, var(--c-other)) 20%, transparent); box-shadow: inset 0 0 0 .5px color-mix(in srgb, var(--cat, var(--c-other)) 35%, transparent); }
+.row-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.row-main b { font-weight: 650; font-size: 16px; overflow-wrap: anywhere; }
+.row-main small { color: var(--label2); font-size: 13px; overflow-wrap: anywhere; }
+.slot { flex: none; font-size: 12px; font-weight: 650; color: var(--label2); background: var(--fill); padding: 3px 9px; border-radius: 99px; }
+.add-row { display: flex; align-items: center; gap: 10px; padding: 14px 16px; color: var(--accent); font-weight: 650; width: 100%; position: relative; }
+.dishes { display: flex; flex-wrap: wrap; gap: 4px 10px; }
 
 /* Wheel */
-.wheel-card { padding: 16px; display: flex; flex-direction: column; gap: 14px; align-items: stretch; }
-.wheel-box { position: relative; width: 100%; max-width: 340px; aspect-ratio: 1; margin: 6px auto 0; }
-.wheel-box canvas { width: 100%; height: 100%; display: block; }
-.pointer { position: absolute; left: 50%; top: -6px; transform: translateX(-50%); width: 28px; height: 34px; filter: drop-shadow(0 2px 3px rgba(0,0,0,.25)); }
+.wheel-card { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.wheel-box { position: relative; width: 100%; max-width: 340px; aspect-ratio: 1; margin: 8px auto 0; }
+.wheel-box::before { content: ""; position: absolute; inset: -10px; border-radius: 50%; background: var(--glass); box-shadow: inset 0 1px 0 var(--glass-hi), inset 0 0 0 .5px var(--glass-edge), 0 14px 40px var(--shade); }
+.wheel-box canvas { position: relative; width: 100%; height: 100%; display: block; }
+.pointer { position: absolute; left: 50%; top: -16px; transform: translateX(-50%); width: 30px; height: 36px; filter: drop-shadow(0 3px 4px rgba(0,0,0,.28)); z-index: 2; }
 .spin {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  width: 84px; height: 84px; border-radius: 50%; font-size: 17px; font-weight: 700; color: var(--accent);
-  display: grid; place-items: center; transition: transform .15s;
+  width: 88px; height: 88px; border-radius: 50%; font-size: 18px; font-weight: 800; color: var(--accent);
+  display: grid; place-items: center; transition: transform .15s; z-index: 2;
+  background: var(--glass-strong); -webkit-backdrop-filter: blur(20px) saturate(180%); backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: inset 0 1px 0 var(--glass-hi), inset 0 0 0 .5px var(--glass-edge), 0 8px 24px var(--shade);
 }
-.spin:active { transform: translate(-50%, -50%) scale(.93); }
+.spin:active { transform: translate(-50%, -50%) scale(.92); }
 .spin:disabled { color: var(--label3); }
-.result { display: flex; flex-direction: column; gap: 12px; align-items: center; text-align: center; padding: 4px 0 2px; }
-.result .r-name { font-size: 26px; font-weight: 700; letter-spacing: -.01em; }
+.result { display: flex; flex-direction: column; gap: 10px; align-items: center; text-align: center; padding: 6px 0 2px; }
+.result .r-name { font-size: 28px; font-weight: 800; letter-spacing: -.02em; }
 .result .r-meta { font-size: 14px; color: var(--label2); }
+.result .r-tip { font-size: 14px; padding: 6px 12px; border-radius: 12px; background: var(--fill); }
 .result .r-note { font-size: 12px; color: var(--label2); }
 .btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-.btn { height: 44px; padding: 0 20px; border-radius: 99px; background: var(--fill); font-weight: 600; font-size: 16px; }
-.btn.primary { background: var(--accent); color: #fff; }
-.toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 15px; }
-.switch { position: relative; width: 51px; height: 31px; flex: none; }
-.switch input { opacity: 0; position: absolute; inset: 0; margin: 0; cursor: pointer; }
-.switch i { position: absolute; inset: 0; border-radius: 99px; background: var(--fill); transition: background .2s; pointer-events: none; }
-.switch i::after { content: ""; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.2); transition: transform .22s; }
-.switch input:checked + i { background: var(--green); }
-.switch input:checked + i::after { transform: translateX(20px); }
+.btn { height: 46px; padding: 0 22px; border-radius: 99px; background: var(--fill); font-weight: 650; font-size: 16px; }
+.btn.primary { background: var(--accent); color: #fff; box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 35%, transparent); }
+.btn:active { transform: scale(.97); }
 
 /* Calendar */
 .cal { padding: 14px 10px 10px; }
 .cal-head { display: flex; align-items: center; justify-content: space-between; padding: 0 6px 10px; }
-.cal-head b { font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; }
-.nav { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--accent); font-size: 22px; }
+.cal-head b { font-size: 17px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.nav { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--accent); font-size: 24px; }
 .nav:active { background: var(--fill); }
 .grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; }
-.dow { text-align: center; font-size: 11px; font-weight: 600; color: var(--label2); padding-bottom: 6px; }
-.day { aspect-ratio: .82; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 2px; padding-top: 5px; min-width: 0; }
-.day .n { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; font-size: 15px; font-variant-numeric: tabular-nums; }
-.day.today .n { color: var(--accent); font-weight: 700; }
-.day[aria-pressed="true"] .n { background: var(--accent); color: #fff; font-weight: 700; }
+.dow { text-align: center; font-size: 11px; font-weight: 650; color: var(--label2); padding-bottom: 6px; }
+.day { aspect-ratio: .82; border-radius: 14px; display: flex; flex-direction: column; align-items: center; gap: 2px; padding-top: 5px; min-width: 0; }
+.day .n { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 50%; font-size: 15px; font-variant-numeric: tabular-nums; }
+.day.today .n { color: var(--accent); font-weight: 800; }
+.day[aria-pressed="true"] .n { background: var(--accent); color: #fff; font-weight: 800; box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 40%, transparent); }
 .day .em { font-size: 13px; line-height: 1; letter-spacing: -2px; white-space: nowrap; overflow: hidden; max-width: 100%; }
 .day.out { visibility: hidden; }
 .day:active { background: var(--fill); }
 
 /* Places */
 .sum { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); }
-.sum div { padding: 14px 12px; display: flex; flex-direction: column; gap: 2px; text-align: center; }
+.sum div { padding: 15px 10px; display: flex; flex-direction: column; gap: 2px; text-align: center; }
 .sum div + div { border-left: .5px solid var(--sep); }
-.sum b { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sum b { font-size: 25px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
 .sum small { font-size: 12px; color: var(--label2); }
-.list { overflow: hidden; }
-.prow { display: grid; grid-template-columns: 36px minmax(0,1fr) auto; gap: 4px 12px; padding: 12px 16px; width: 100%; text-align: left; position: relative; align-items: center; }
-.prow + .prow::before { content: ""; position: absolute; top: 0; left: 64px; right: 0; border-top: .5px solid var(--sep); }
+.prow { display: grid; grid-template-columns: 38px minmax(0,1fr) auto; gap: 6px 12px; padding: 12px 16px; width: 100%; text-align: left; position: relative; align-items: center; }
+.prow + .prow::before { content: ""; position: absolute; top: 0; left: 66px; right: 0; border-top: .5px solid var(--sep); }
 .prow:active { background: var(--fill); }
 .prow .num { text-align: right; font-variant-numeric: tabular-nums; display: flex; flex-direction: column; }
-.prow .num b { font-size: 16px; font-weight: 600; }
+.prow .num b { font-size: 16px; font-weight: 700; }
 .prow .num small { font-size: 12px; color: var(--label2); }
-.bar { grid-column: 2 / 4; height: 4px; border-radius: 2px; background: var(--fill); overflow: hidden; }
-.bar i { display: block; height: 100%; border-radius: 2px; background: var(--cat, var(--accent)); }
-.prefs { display: inline-flex; gap: 6px; flex-wrap: wrap; }
-.pf { font-size: 11px; font-weight: 600; padding: 1px 6px; border-radius: 99px; background: var(--fill); color: var(--label2); }
+.bar { grid-column: 2 / 4; height: 5px; border-radius: 3px; background: var(--fill); overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: 3px; background: var(--cat, var(--accent)); }
+.prefs { display: inline-flex; gap: 6px; flex-wrap: wrap; vertical-align: middle; }
+.pf { font-size: 11px; font-weight: 650; padding: 1px 7px; border-radius: 99px; background: var(--fill); color: var(--label2); }
 .pf.love { color: var(--accent); background: var(--accent-soft); }
 .pf.no { color: var(--red); }
 .locked .ico { filter: grayscale(1); opacity: .55; }
 .locked .row-main b { color: var(--label2); }
-.lock-tag { font-size: 12px; color: var(--gold); font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
-
-.empty { padding: 26px 20px; text-align: center; color: var(--label2); font-size: 15px; display: flex; flex-direction: column; gap: 6px; align-items: center; }
-.empty strong { color: var(--label); font-size: 17px; font-weight: 600; }
+.lock-tag { font-size: 12px; color: var(--gold); font-weight: 700; }
+.empty { padding: 26px 20px; text-align: center; color: var(--label2); font-size: 15px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.empty strong { color: var(--label); font-size: 17px; font-weight: 650; }
 
 /* Floating chrome */
-.glass {
-  background: var(--glass);
-  -webkit-backdrop-filter: blur(24px) saturate(190%); backdrop-filter: blur(24px) saturate(190%);
-  box-shadow: var(--shadow), inset 0 0 0 .5px var(--glass-edge);
-}
 .dock {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; pointer-events: none;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
@@ -178,86 +197,127 @@ h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
 }
 .dock-in { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; justify-content: space-between; }
 .tabs { pointer-events: auto; display: flex; padding: 5px; border-radius: 99px; gap: 2px; }
-.tabs button { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 6px 16px 5px; border-radius: 99px; font-size: 11px; font-weight: 600; min-width: 66px; }
+.tabs button { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 6px 16px 5px; border-radius: 99px; font-size: 11px; font-weight: 650; min-width: 66px; transition: background .25s, color .25s; }
 .tabs button svg { width: 24px; height: 24px; }
-.tabs button[aria-selected="true"] { color: var(--accent); background: var(--fill); }
-.fab { pointer-events: auto; width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; color: var(--accent); flex: none; }
-.fab:active, .tabs button:active { transform: scale(.94); }
+.tabs button[aria-selected="true"] { color: var(--accent); background: var(--glass-strong); box-shadow: inset 0 0 0 .5px var(--glass-edge); }
+.fab { pointer-events: auto; width: 62px; height: 62px; border-radius: 50%; display: grid; place-items: center; color: var(--accent); flex: none; }
+.fab:active, .tabs button:active { transform: scale(.93); }
 
 /* Sheet */
 .scrim { position: fixed; inset: 0; background: var(--scrim); z-index: 30; opacity: 0; transition: opacity .25s; }
 .scrim.on { opacity: 1; }
 .sheet {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 31; max-height: 92%;
-  display: flex; flex-direction: column; background: var(--bg); border-radius: 26px 26px 0 0; box-shadow: var(--shadow);
-  transform: translateY(105%); transition: transform .34s cubic-bezier(.2,.9,.25,1); max-width: 680px; margin: 0 auto;
+  display: flex; flex-direction: column; border-radius: 30px 30px 0 0;
+  background: var(--glass-strong); -webkit-backdrop-filter: blur(40px) saturate(190%); backdrop-filter: blur(40px) saturate(190%);
+  box-shadow: inset 0 1px 0 var(--glass-hi), inset 0 0 0 .5px var(--glass-edge), 0 -10px 40px var(--shade);
+  transform: translateY(105%); transition: transform .38s cubic-bezier(.2,.9,.25,1); max-width: 680px; margin: 0 auto;
 }
 .sheet.on { transform: none; }
 .grab { width: 38px; height: 5px; border-radius: 3px; background: var(--label3); margin: 8px auto 0; flex: none; }
 .sheet-bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 8px 16px 6px; flex: none; }
-.sheet-bar h3 { margin: 0; font-size: 17px; font-weight: 600; }
+.sheet-bar h3 { margin: 0; font-size: 17px; font-weight: 650; }
 .sheet-bar .l { justify-self: start; } .sheet-bar .r { justify-self: end; }
-.pill { height: 36px; padding: 0 16px; border-radius: 99px; background: var(--fill); font-size: 16px; font-weight: 500; }
-.pill.primary { background: var(--accent); color: #fff; font-weight: 600; }
+.pill { height: 36px; padding: 0 16px; border-radius: 99px; background: var(--fill); font-size: 16px; font-weight: 550; }
+.pill.primary { background: var(--accent); color: #fff; font-weight: 650; }
 .pill:disabled { opacity: .45; }
 .sheet-body {
   overflow-y: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
   padding-block: 10px calc(28px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 18px;
 }
-.field { display: flex; flex-direction: column; gap: 6px; }
-.field > .lbl { font-size: 13px; color: var(--label2); padding: 0 14px; letter-spacing: .02em; }
-.field input[type="text"], .field input[type="date"], .field input[type="search"] {
-  width: 100%; border: 0; outline: none; background: var(--card); border-radius: 14px; padding: 13px 14px; font-size: 16px; min-height: 48px;
+.fld { display: flex; flex-direction: column; gap: 6px; }
+.fld > .lbl { font-size: 13px; color: var(--label2); padding: 0 14px; letter-spacing: .02em; }
+.inp {
+  width: 100%; border: 0; outline: none; background: var(--fill); border-radius: 14px; padding: 13px 14px; font-size: 16px; min-height: 48px;
 }
-.field input:focus { box-shadow: inset 0 0 0 1.5px var(--accent); }
-.opt-list { max-height: 260px; overflow-y: auto; }
+.inp:focus { box-shadow: inset 0 0 0 1.5px var(--accent); }
+.box { background: var(--fill); border-radius: 18px; }
+.opt-list { max-height: 250px; overflow-y: auto; }
 .opt { display: flex; align-items: center; gap: 12px; padding: 10px 14px; width: 100%; text-align: left; position: relative; }
-.opt + .opt::before { content: ""; position: absolute; top: 0; left: 62px; right: 0; border-top: .5px solid var(--sep); }
+.opt + .opt::before { content: ""; position: absolute; top: 0; left: 64px; right: 0; border-top: .5px solid var(--sep); }
 .opt[aria-pressed="true"] { background: var(--accent-soft); }
-.opt .check { margin-left: auto; color: var(--accent); font-weight: 700; visibility: hidden; }
+.opt .check { margin-left: auto; color: var(--accent); font-weight: 800; visibility: hidden; }
 .opt[aria-pressed="true"] .check { visibility: visible; }
-.pref-row { display: grid; grid-template-columns: 40px 1fr; align-items: center; gap: 10px; }
-.pref-row > span { font-size: 15px; font-weight: 600; padding-left: 4px; }
-.danger { background: var(--card); color: var(--red); border-radius: 14px; height: 50px; font-size: 16px; font-weight: 500; width: 100%; }
-.danger.confirm { background: var(--red); color: #fff; font-weight: 600; }
-.toggle-card { background: var(--card); border-radius: 14px; padding: 10px 14px; min-height: 52px; }
-.toggle-card small { display: block; font-size: 13px; color: var(--label2); }
+.opt.new { color: var(--accent); font-weight: 650; }
+.opt.new .ico { background: var(--accent-soft); box-shadow: none; color: var(--accent); font-size: 22px; }
+.pref-row { display: grid; grid-template-columns: 34px 1fr; align-items: center; gap: 10px; }
+.pref-row > span { font-size: 15px; font-weight: 650; padding-left: 6px; }
+.danger { background: var(--fill); color: var(--red); border-radius: 14px; height: 50px; font-size: 16px; font-weight: 550; width: 100%; }
+.danger.confirm { background: var(--red); color: #fff; font-weight: 650; }
+.toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--fill); border-radius: 14px; padding: 10px 14px; min-height: 52px; }
+.toggle-row small { display: block; font-size: 13px; color: var(--label2); }
+.switch { position: relative; width: 51px; height: 31px; flex: none; }
+.switch input { opacity: 0; position: absolute; inset: 0; margin: 0; cursor: pointer; }
+.switch i { position: absolute; inset: 0; border-radius: 99px; background: var(--fill); transition: background .2s; pointer-events: none; }
+.switch i::after { content: ""; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.2); transition: transform .22s; }
+.switch input:checked + i { background: var(--green); }
+.switch input:checked + i::after { transform: translateX(20px); }
+
+/* Dish + taste slider */
+.dish { background: var(--fill); border-radius: 18px; padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 8px; }
+.dish-top { display: flex; align-items: center; gap: 8px; }
+.dish-top input { flex: 1; min-width: 0; border: 0; outline: none; background: none; font-size: 16px; font-weight: 600; padding: 6px 2px; }
+.dish-top input::placeholder { color: var(--label3); font-weight: 500; }
+.x { width: 28px; height: 28px; border-radius: 50%; background: var(--fill); color: var(--label2); font-size: 15px; flex: none; }
+.taste { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; }
+.taste .face { min-width: 74px; display: flex; align-items: center; gap: 4px; justify-content: flex-end; font-size: 13px; font-weight: 650; color: var(--label2); }
+.taste .face span { font-size: 24px; transition: transform .15s; }
+.taste-ends { display: flex; justify-content: space-between; font-size: 11px; color: var(--label2); padding: 0 2px; margin-top: -4px; grid-column: 1; }
+input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 30px; background: none; margin: 0; cursor: pointer; }
+input[type="range"]::-webkit-slider-runnable-track { height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--red), var(--yellow) 50%, var(--green)); }
+input[type="range"]::-moz-range-track { height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--red), var(--yellow) 50%, var(--green)); }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 30px; height: 30px; margin-top: -11px; border-radius: 50%; background: #fff; box-shadow: 0 3px 10px rgba(0,0,0,.25), inset 0 0 0 .5px rgba(0,0,0,.06); }
+input[type="range"]::-moz-range-thumb { width: 30px; height: 30px; border: 0; border-radius: 50%; background: #fff; box-shadow: 0 3px 10px rgba(0,0,0,.25); }
+.add-dish { height: 44px; border-radius: 14px; border: 1.5px dashed var(--label3); color: var(--accent); font-weight: 650; }
+.dish-stats { display: flex; flex-direction: column; }
+.dish-stats div { display: flex; align-items: center; gap: 10px; padding: 9px 14px; font-size: 15px; }
+.dish-stats div + div { border-top: .5px solid var(--sep); }
+.dish-stats b { flex: 1; min-width: 0; font-weight: 550; overflow-wrap: anywhere; }
+.dish-stats small { color: var(--label2); font-size: 13px; font-variant-numeric: tabular-nums; }
 
 /* Unlock moment */
-.unlock { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: color-mix(in srgb, var(--bg) 55%, transparent); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); opacity: 0; transition: opacity .3s; padding: 24px; }
+.unlock { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 24px; background: color-mix(in srgb, var(--base) 40%, transparent); -webkit-backdrop-filter: blur(22px) saturate(160%); backdrop-filter: blur(22px) saturate(160%); opacity: 0; transition: opacity .3s; }
 .unlock.on { opacity: 1; }
 .unlock canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.u-card { position: relative; background: var(--card); border-radius: 30px; padding: 30px 26px 24px; width: min(320px, 100%); text-align: center; display: flex; flex-direction: column; gap: 8px; align-items: center; box-shadow: var(--shadow); transform: scale(.6); opacity: 0; }
-.unlock.on .u-card { animation: pop .6s cubic-bezier(.2,1.5,.4,1) .55s forwards; }
-.u-lock { width: 92px; height: 92px; position: relative; margin-bottom: 4px; }
-.u-lock svg { width: 100%; height: 100%; overflow: visible; }
-.u-lock .shackle { transform-origin: 70px 40px; }
-.unlock.on .u-lock { animation: shake .45s ease-in-out .1s 1; }
-.unlock.on .u-lock .shackle { animation: open .4s cubic-bezier(.3,1.6,.5,1) .5s forwards; }
-.u-glow { position: absolute; inset: -30px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--gold) 45%, transparent), transparent 65%); opacity: 0; }
-.unlock.on .u-glow { animation: glow 1.4s ease-out .55s forwards; }
-.u-eyebrow { font-size: 13px; font-weight: 700; color: var(--gold); letter-spacing: .12em; }
-.u-name { font-size: 28px; font-weight: 800; letter-spacing: -.01em; overflow-wrap: anywhere; }
-.u-meta { font-size: 14px; color: var(--label2); }
-@keyframes shake { 0%,100% { transform: rotate(0) } 20% { transform: rotate(-12deg) } 40% { transform: rotate(10deg) } 60% { transform: rotate(-7deg) } 80% { transform: rotate(4deg) } }
-@keyframes open { to { transform: translateY(-14px) rotate(28deg); } }
-@keyframes pop { to { transform: scale(1); opacity: 1; } }
-@keyframes glow { 0% { opacity: 0; transform: scale(.5) } 40% { opacity: 1 } 100% { opacity: .6; transform: scale(1.2) } }
+.u-card { position: relative; border-radius: 34px; padding: 28px 24px 24px; width: min(330px, 100%); text-align: center; display: flex; flex-direction: column; gap: 8px; align-items: center; transform: scale(.85) translateY(20px); opacity: 0; transition: transform .5s cubic-bezier(.2,1.4,.4,1), opacity .3s; background: var(--glass-strong); }
+.unlock.on .u-card { transform: none; opacity: 1; }
+.u-eyebrow { font-size: 13px; font-weight: 800; color: var(--gold); letter-spacing: .14em; }
+.u-name { font-size: 30px; font-weight: 800; letter-spacing: -.02em; overflow-wrap: anywhere; filter: blur(9px); transition: filter .6s ease .15s; user-select: none; }
+.u-meta { font-size: 14px; color: var(--label2); min-height: 20px; }
+.u-hold { position: relative; width: 128px; height: 128px; margin: 10px 0 2px; border-radius: 50%; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.u-hold svg { width: 100%; height: 100%; overflow: visible; }
+.u-hold .track { stroke: var(--fill); }
+.u-hold .prog { stroke: var(--gold); transition: stroke-dashoffset .05s linear; }
+.u-hold .lock { transform-origin: 64px 70px; }
+.u-hold .shackle { transform-origin: 80px 50px; transition: transform .45s cubic-bezier(.3,1.7,.5,1); }
+.u-hold.holding .lock { animation: rattle .12s linear infinite; }
+.u-glow { position: absolute; inset: -40px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--gold) 55%, transparent), transparent 62%); opacity: 0; transform: scale(.4); transition: opacity .3s; pointer-events: none; }
+.u-hold.holding .u-glow { opacity: calc(var(--p, 0) * .9); transform: scale(calc(.4 + var(--p, 0) * .6)); }
+.u-hint { font-size: 14px; font-weight: 650; color: var(--label2); min-height: 20px; }
+.unlock.done .u-name { filter: none; }
+.unlock.done .u-hold .shackle { transform: translateY(-13px); }
+.unlock.done .u-glow { animation: burst 1.2s ease-out forwards; }
+.unlock.done .u-hold { animation: bump .5s cubic-bezier(.2,1.6,.4,1); }
+@keyframes rattle { 0% { transform: rotate(calc(var(--p, 0) * -9deg)) } 50% { transform: rotate(calc(var(--p, 0) * 9deg)) } 100% { transform: rotate(calc(var(--p, 0) * -9deg)) } }
+@keyframes burst { 0% { opacity: 1; transform: scale(.6) } 100% { opacity: .55; transform: scale(1.35) } }
+@keyframes bump { 0% { transform: scale(1) } 40% { transform: scale(1.18) } 100% { transform: scale(1) } }
 
-.toast { position: fixed; left: 50%; top: calc(14px + env(safe-area-inset-top, 0px)); z-index: 60; transform: translate(-50%, -160%); transition: transform .3s cubic-bezier(.2,.9,.25,1); padding: 10px 18px; border-radius: 99px; font-size: 14px; font-weight: 600; max-width: calc(100% - 32px); text-align: center; }
+.toast { position: fixed; left: 50%; top: calc(14px + env(safe-area-inset-top, 0px)); z-index: 60; transform: translate(-50%, -160%); transition: transform .3s cubic-bezier(.2,.9,.25,1); padding: 10px 18px; border-radius: 99px; font-size: 14px; font-weight: 650; max-width: calc(100% - 32px); text-align: center; }
 .toast.on { transform: translate(-50%, 0); }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { transition: none !important; animation-duration: .01ms !important; animation-delay: 0s !important; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
 }
 </style>
+
+<div class="field-bg" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
 <main class="wrap">
   <header class="top">
     <div class="eyebrow" id="eyebrow"></div>
     <h1 id="title">今天吃什么</h1>
   </header>
-  <div id="notice" class="banner" hidden></div>
+  <div id="notice" class="banner glass" hidden></div>
   <div id="view" class="stack"></div>
 </main>
 
@@ -290,19 +350,24 @@ h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
 
 <div class="unlock" id="unlock" hidden>
   <canvas id="confetti"></canvas>
-  <div class="u-card" role="alertdialog" aria-labelledby="u-name">
-    <div class="u-lock">
-      <div class="u-glow"></div>
-      <svg viewBox="0 0 100 100">
-        <path class="shackle" d="M30 46V32a20 20 0 0 1 40 0v14" fill="none" stroke="var(--gold)" stroke-width="10" stroke-linecap="round"/>
-        <rect x="18" y="44" width="64" height="48" rx="14" fill="var(--gold)"/>
-        <circle cx="50" cy="64" r="7" fill="var(--card)"/><rect x="47" y="66" width="6" height="12" rx="3" fill="var(--card)"/>
-      </svg>
-    </div>
-    <div class="u-eyebrow">解锁新地方</div>
+  <div class="u-card glass" role="alertdialog" aria-labelledby="u-name" aria-describedby="u-hint">
+    <div class="u-eyebrow" id="u-eyebrow">发现新地方</div>
     <div class="u-name" id="u-name"></div>
     <div class="u-meta" id="u-meta"></div>
-    <button class="btn primary" id="u-ok" style="margin-top:10px">太好了</button>
+    <button class="u-hold" id="u-hold" aria-label="按住解锁">
+      <span class="u-glow"></span>
+      <svg viewBox="0 0 128 128" aria-hidden="true">
+        <circle class="track" cx="64" cy="64" r="58" fill="none" stroke-width="7"/>
+        <circle class="prog" id="u-prog" cx="64" cy="64" r="58" fill="none" stroke-width="7" stroke-linecap="round" transform="rotate(-90 64 64)" stroke-dasharray="364.4" stroke-dashoffset="364.4"/>
+        <g class="lock">
+          <path class="shackle" d="M48 60V48a16 16 0 0 1 32 0v12" fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round"/>
+          <rect x="38" y="58" width="52" height="40" rx="12" fill="var(--gold)"/>
+          <circle cx="64" cy="74" r="5.5" fill="var(--glass-strong)"/><rect x="61.5" y="76" width="5" height="10" rx="2.5" fill="var(--glass-strong)"/>
+        </g>
+      </svg>
+    </button>
+    <div class="u-hint" id="u-hint">按住锁头解锁</div>
+    <button class="btn primary" id="u-ok" hidden>太好了</button>
   </div>
 </div>
 
@@ -323,6 +388,7 @@ h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
     for (const c of kids.flat()) if (c != null && c !== false) el.append(c.nodeType ? c : document.createTextNode(String(c)));
     return el;
   };
+  const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const CATS = [
     { k: "zh", name: "中餐", em: "🥢" }, { k: "cha", name: "茶餐厅", em: "🫖" },
@@ -335,32 +401,41 @@ h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
   const catVar = (k) => `var(--c-${cat(k).k})`;
   const SLOTS = [{ k: "lunch", name: "午餐" }, { k: "dinner", name: "晚餐" }, { k: "late", name: "宵夜" }];
   const SLOT = Object.fromEntries(SLOTS.map((s) => [s.k, s.name]));
+  const slotIdx = (m) => SLOTS.findIndex((s) => s.k === m.slot);
   const WHO = { her: "她", him: "他" };
   const PREF = { love: "爱吃", ok: "还行", no: "不想吃" };
+  const taste = (s) => s < 20 ? ["🤢", "踩雷"] : s < 45 ? ["😕", "不太行"] : s < 70 ? ["🙂", "还可以"] : s < 90 ? ["😋", "好吃"] : ["🤩", "超好吃"];
 
   const ymd = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   const todayStr = () => ymd(new Date());
   const md = (s) => { const [, m, d] = s.split("-"); return `${+m}月${+d}日`; };
-  const pct = (n, t) => t ? (n / t * 100 < 10 && n ? (n / t * 100).toFixed(1) : Math.round(n / t * 100)) + "%" : "0%";
+  const pct = (n, t) => { if (!t) return "0%"; const v = n / t * 100; return (v < 10 && n ? v.toFixed(1) : Math.round(v)) + "%"; };
 
   /* ---------- state ---------- */
   let tab = ["today", "cal", "places"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "today";
   let places = {}, meals = [];
   let loaded = { places: false, meals: false };
   let db = null, me = null, myRole = "her", readOnly = false;
-  let wheelCat = "all", wheelMode = "both", explore = true, spinning = false, lastPick = null, wheelAngle = 0;
+  let wheelCat = "all", wheelMode = "both", spinning = false, lastPick = null, wheelAngle = 0;
   const now = new Date();
   let calY = now.getFullYear(), calM = now.getMonth(), selDay = todayStr();
   let placeFilter = "all";
 
   const placeList = () => Object.values(places);
   const countsByPlace = () => { const c = {}; for (const m of meals) c[m.placeId] = (c[m.placeId] || 0) + 1; return c; };
-  const isUnlocked = (p) => !!p.unlockedAt || p.isDefault;
+  const isUnlocked = (p) => !!p.unlockedAt || !!p.isDefault;
+  function dishStats(placeId) {
+    const by = {};
+    for (const m of meals) if (m.placeId === placeId) for (const d of m.dishes || []) {
+      const k = d.name.trim(); if (!k) continue;
+      (by[k] ||= { name: k, sum: 0, n: 0 }); by[k].sum += d.score; by[k].n++;
+    }
+    return Object.values(by).map((x) => ({ ...x, avg: x.sum / x.n })).sort((a, b) => b.avg - a.avg || b.n - a.n);
+  }
 
   let toastT;
-  function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), 2200); }
+  function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), 2300); }
 
-  /* ---------- writes ---------- */
   async function write(fn) {
     if (!db) { toast("没连上存储，暂时不能保存"); return false; }
     if (readOnly) { toast("你现在只能查看，请让她把你设为“编辑者”"); return false; }
@@ -380,121 +455,128 @@ h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
     const d = new Date();
     $("#eyebrow").textContent = `${d.getMonth() + 1}月${d.getDate()}日 · 星期${"日一二三四五六"[d.getDay()]}`;
     document.querySelectorAll(".tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
-    const v = $("#view");
-    v.replaceChildren(...(tab === "today" ? viewToday() : tab === "cal" ? viewCal() : viewPlaces()));
+    $("#view").replaceChildren(...(tab === "today" ? viewToday() : tab === "cal" ? viewCal() : viewPlaces()));
     if (tab === "today") drawWheel();
   }
 
   function mealRow(m) {
-    const p = places[m.placeId];
-    const c = cat(p?.cat);
-    return h("button", { class: "today-row", onclick: () => openMeal(m) },
+    const p = places[m.placeId], c = cat(p?.cat);
+    const ds = (m.dishes || []).filter((d) => d.name);
+    return h("button", { class: "row", onclick: () => openMeal(m) },
       h("span", { class: "ico", style: `--cat:${catVar(p?.cat)}` }, c.em),
       h("span", { class: "row-main" }, h("b", {}, p ? p.name : "（已删除的餐厅）"),
-        h("small", {}, `${c.name} · ${WHO[m.decidedBy] || "?"}决定的`)),
+        ds.length ? h("small", { class: "dishes" }, ds.map((d) => h("span", {}, `${d.name} ${taste(d.score)[0]}`)))
+          : h("small", {}, `${c.name} · ${WHO[m.decidedBy] || "?"}决定的`)),
       h("span", { class: "slot" }, SLOT[m.slot] || ""));
   }
 
   function viewToday() {
     const t = todayStr();
-    const todays = meals.filter((m) => m.date === t).sort((a, b) => SLOTS.findIndex((s) => s.k === a.slot) - SLOTS.findIndex((s) => s.k === b.slot));
+    const todays = meals.filter((m) => m.date === t).sort((a, b) => slotIdx(a) - slotIdx(b));
     const todayCard = h("div", { class: "card list" },
-      todays.length ? todays.map(mealRow) : (loaded.meals ? h("div", { class: "empty", style: "padding:18px" }, h("span", {}, "今天还没记吃了什么")) : h("div", { class: "empty", style: "padding:18px" }, "正在加载…")),
-      h("button", { class: "add-row", onclick: () => openMeal({ date: t }) }, "＋ 记下今天吃了什么"));
+      todays.map(mealRow),
+      h("button", { class: "add-row", onclick: () => openMeal({ date: t }) }, todays.length ? "＋ 再记一顿" : "＋ 记下今天吃了什么"));
 
+    const all = placeList();
     const cands = candidates();
     const chips = h("div", { class: "chips", role: "group", "aria-label": "分类" },
-      [{ k: "all", name: "全部", em: "" }, ...CATS].filter((c) => c.k === "all" || placeList().some((p) => (p.cat || "other") === c.k))
-        .map((c) => h("button", { class: "chip", "aria-pressed": String(wheelCat === c.k), onclick: () => { wheelCat = c.k; lastPick = null; render(); } }, c.em ? c.em + " " + c.name : c.name)));
+      [{ k: "all", name: "全部", em: "" }, ...CATS].filter((c) => c.k === "all" || all.some((p) => (p.cat || "other") === c.k))
+        .map((c) => h("button", { class: "chip glass", "aria-pressed": String(wheelCat === c.k), onclick: () => { wheelCat = c.k; lastPick = null; render(); } }, c.em ? `${c.em} ${c.name}` : c.name)));
     const mode = h("div", { class: "seg", role: "group", "aria-label": "听谁的喜好" },
-      [["both", "两个人都行"], ["her", "听她的"], ["him", "听他的"]].map(([k, n]) =>
+      [["both", "两个人"], ["her", "听她的"], ["him", "听他的"]].map(([k, n]) =>
         h("button", { "aria-pressed": String(wheelMode === k), onclick: () => { wheelMode = k; lastPick = null; render(); } }, n)));
-    const exp = h("label", { class: "toggle-row" }, h("span", {}, "包括还没解锁的地方"),
-      h("span", { class: "switch" }, h("input", { type: "checkbox", id: "explore", checked: explore, onchange: (e) => { explore = e.target.checked; lastPick = null; render(); } }), h("i")));
 
-    const box = h("div", { class: "wheel-box" },
-      h("canvas", { id: "wheel", width: "680", height: "680", "aria-label": `转盘，共 ${cands.length} 个选项` }),
-      pointerSvg(),
-      h("button", { class: "spin glass", id: "spin", disabled: cands.length < 1 || spinning, onclick: spin }, spinning ? "…" : "转！"));
-
-    let result = null;
-    if (!cands.length) {
-      result = h("div", { class: "result" }, h("div", { class: "muted" }, loaded.places ? "这个条件下没有可选的餐厅。换个分类，或者到“餐厅”里加几家。" : "正在加载…"));
-    } else if (lastPick && places[lastPick]) {
-      const p = places[lastPick], c = cat(p.cat);
-      result = h("div", { class: "result", id: "result" },
-        h("div", { class: "r-meta" }, "转盘建议"),
-        h("div", { class: "r-name" }, `${c.em} ${p.name}`),
-        h("div", { class: "r-meta" }, `${c.name}${isUnlocked(p) ? "" : " · 🔒 还没解锁"}`),
-        h("div", { class: "btns" },
-          h("button", { class: "btn", onclick: spin }, "再转一次"),
-          h("button", { class: "btn primary", onclick: () => openMeal({ date: todayStr(), placeId: p.id }) }, "就吃这个")),
-        h("div", { class: "r-note" }, "只是建议，点“就吃这个”才会记下来"));
+    let body;
+    if (!all.length) {
+      body = h("div", { class: "empty" }, h("strong", {}, loaded.places ? "转盘还是空的" : "正在加载…"),
+        loaded.places ? h("span", {}, "先把你们常吃的餐厅加进来") : null,
+        loaded.places ? h("button", { class: "btn primary", onclick: () => openPlace(null) }, "＋ 添加餐厅") : null);
     } else {
-      result = h("div", { class: "result" }, h("div", { class: "muted" }, `${cands.length} 个选项 · 喜欢的格子更大，更容易转到`));
+      const box = h("div", { class: "wheel-box" },
+        h("canvas", { id: "wheel", width: "680", height: "680", "aria-label": `转盘，共 ${cands.length} 家餐厅` }),
+        pointerSvg(),
+        h("button", { class: "spin", id: "spin", disabled: spinning || !cands.length, onclick: spin }, spinning ? "…" : "转！"));
+      let result;
+      if (lastPick && places[lastPick]) {
+        const p = places[lastPick], c = cat(p.cat), st = dishStats(p.id);
+        const best = st.find((x) => x.avg >= 70), worst = [...st].reverse().find((x) => x.avg < 45);
+        result = h("div", { class: "result", id: "result" },
+          h("div", { class: "r-meta" }, "转盘建议"),
+          h("div", { class: "r-name" }, `${c.em} ${p.name}`),
+          h("div", { class: "r-meta" }, c.name + (isUnlocked(p) ? "" : " · 🔒 还没解锁，去吃一次就能解锁")),
+          best ? h("div", { class: "r-tip" }, `可以点：${best.name} ${taste(best.avg)[0]}`) : null,
+          worst ? h("div", { class: "r-tip" }, `别再点：${worst.name} ${taste(worst.avg)[0]}`) : null,
+          h("div", { class: "btns" },
+            h("button", { class: "btn", onclick: spin }, "再转一次"),
+            h("button", { class: "btn primary", onclick: () => openMeal({ date: todayStr(), placeId: p.id }) }, "就吃这个")),
+          h("div", { class: "r-note" }, "只是建议，点“就吃这个”才会记下来"));
+      } else {
+        const hint = wheelMode === "both" ? "两个人都爱吃的格子最大" : `${WHO[wheelMode]}爱吃的格子更大，不想吃的很小`;
+        result = h("div", { class: "result" }, h("div", { class: "muted" }, `${cands.length} 家 · ${hint}`));
+      }
+      body = [mode, box, result];
     }
-
     return [
       h("div", { class: "sec-h" }, h("h2", {}, "今天"), h("span", {}, todays.length ? `${todays.length} 顿` : "")),
       todayCard,
-      h("div", { class: "sec-h" }, h("h2", {}, "转盘"), h("span", {}, "不知道吃什么就转一下")),
-      chips,
-      h("div", { class: "card wheel-card" }, mode, exp, box, result),
+      h("div", { class: "sec-h" }, h("h2", {}, "转盘"), h("button", { class: "mini glass", onclick: () => openPlace(null) }, "＋ 新餐厅")),
+      all.length ? chips : null,
+      h("div", { class: "card wheel-card" }, body),
     ];
   }
 
   function pointerSvg() {
     const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    s.setAttribute("class", "pointer"); s.setAttribute("viewBox", "0 0 28 34");
-    s.innerHTML = '<path d="M14 33 2 9a12 12 0 1 1 24 0z" fill="var(--accent)"/><circle cx="14" cy="11" r="4.5" fill="var(--card)"/>';
+    s.setAttribute("class", "pointer"); s.setAttribute("viewBox", "0 0 30 36");
+    s.innerHTML = '<path d="M15 35 2 10a13 13 0 1 1 26 0z" fill="var(--accent)"/><circle cx="15" cy="12" r="5" fill="#fff"/>';
     return s;
   }
 
-  /* ---------- wheel ---------- */
+  /* ---------- wheel: every added restaurant is on it; preferences only change slice size ---------- */
+  const PW = { love: 2, ok: 1, "": 1, no: .4 };
   function weightFor(p) {
-    const prefs = wheelMode === "both" ? [p.prefHer, p.prefHim] : [wheelMode === "her" ? p.prefHer : p.prefHim];
-    if (prefs.includes("no")) return 0;
-    return 1 + prefs.filter((x) => x === "love").length;
+    const prefs = wheelMode === "both" ? [p.prefHer || "", p.prefHim || ""] : [(wheelMode === "her" ? p.prefHer : p.prefHim) || ""];
+    return prefs.reduce((w, x) => w * (PW[x] ?? 1), 1);
   }
   function candidates() {
     return placeList()
       .filter((p) => wheelCat === "all" || (p.cat || "other") === wheelCat)
-      .filter((p) => explore || isUnlocked(p))
       .map((p) => ({ p, w: weightFor(p) }))
-      .filter((x) => x.w > 0)
       .sort((a, b) => (a.p.cat || "").localeCompare(b.p.cat || "") || (a.p.createdAt || "").localeCompare(b.p.createdAt || ""));
   }
   function drawWheel() {
     const cv = $("#wheel"); if (!cv) return;
-    const ctx = cv.getContext("2d"), S = cv.width, R = S / 2 - 8;
+    const ctx = cv.getContext("2d"), S = cv.width, R = S / 2 - 6;
     const cs = getComputedStyle(document.documentElement);
     const cands = candidates();
     ctx.clearRect(0, 0, S, S);
     ctx.save(); ctx.translate(S / 2, S / 2);
-    if (!cands.length) {
-      ctx.fillStyle = cs.getPropertyValue("--fill"); ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill(); ctx.restore(); return;
-    }
     const total = cands.reduce((s, x) => s + x.w, 0);
     let a = wheelAngle - Math.PI / 2;
-    const card = cs.getPropertyValue("--card").trim();
+    const font = cs.getPropertyValue("--font");
     cands.forEach((x, i) => {
       const span = x.w / total * Math.PI * 2;
       const col = cs.getPropertyValue(`--c-${cat(x.p.cat).k}`).trim();
       ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, R, a, a + span); ctx.closePath();
-      ctx.fillStyle = col; ctx.globalAlpha = i % 2 ? .78 : 1; ctx.fill(); ctx.globalAlpha = 1;
-      ctx.strokeStyle = card; ctx.lineWidth = 4; ctx.stroke();
-      const mid = a + span / 2, cosm = Math.cos(mid);
-      ctx.save(); ctx.rotate(cosm < 0 ? mid + Math.PI : mid);
-      ctx.fillStyle = "#fff"; ctx.textAlign = cosm < 0 ? "left" : "right"; ctx.textBaseline = "middle";
-      const fs = Math.max(18, Math.min(30, span * R * .42));
-      ctx.font = `600 ${fs}px ${cs.getPropertyValue("--font")}`;
+      ctx.fillStyle = col; ctx.globalAlpha = i % 2 ? .8 : 1; ctx.fill(); ctx.globalAlpha = 1;
+      if (cands.length > 1) { ctx.strokeStyle = "rgba(255,255,255,.85)"; ctx.lineWidth = 4; ctx.stroke(); }
+      const mid = a + span / 2, left = Math.cos(mid) < 0;
+      ctx.save(); ctx.rotate(left ? mid + Math.PI : mid);
+      ctx.fillStyle = "#fff"; ctx.textAlign = left ? "left" : "right"; ctx.textBaseline = "middle";
+      ctx.shadowColor = "rgba(0,0,0,.25)"; ctx.shadowBlur = 4;
+      const fs = Math.max(18, Math.min(32, span * R * .4));
+      ctx.font = `700 ${fs}px ${font}`;
       let label = x.p.name; if (label.length > 7) label = label.slice(0, 6) + "…";
       if (!isUnlocked(x.p)) label = "🔒" + label;
-      if (span * R > 22) ctx.fillText(label, cosm < 0 ? -(R - 22) : R - 22, 0);
+      if (span * R > 20) ctx.fillText(label, left ? -(R - 24) : R - 24, 0);
       ctx.restore();
       a += span;
     });
-    ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.strokeStyle = card; ctx.lineWidth = 8; ctx.stroke();
+    // glass sheen
+    const sheen = ctx.createLinearGradient(0, -R, 0, R);
+    sheen.addColorStop(0, "rgba(255,255,255,.28)"); sheen.addColorStop(.5, "rgba(255,255,255,0)");
+    ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fillStyle = sheen; ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,.9)"; ctx.lineWidth = 5; ctx.stroke();
     ctx.restore();
   }
   function spin() {
@@ -504,30 +586,24 @@ h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
     for (; idx < cands.length; idx++) { r -= cands[idx].w; if (r <= 0) break; }
     idx = Math.min(idx, cands.length - 1);
     let start = 0; for (let i = 0; i < idx; i++) start += cands[i].w;
-    const span = cands[idx].w;
-    const mid = (start + span * (.2 + Math.random() * .6)) / total * Math.PI * 2;
-    // pointer at top: wheel angle such that segment mid sits at -90deg
-    const target = -mid;
-    const from = wheelAngle;
-    const base = from - (from % (Math.PI * 2));
-    const to = base + Math.PI * 2 * 6 + ((target % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const dur = reduce ? 1 : 3800, t0 = performance.now();
+    const mid = (start + cands[idx].w * (.2 + Math.random() * .6)) / total * Math.PI * 2;
+    const TAU = Math.PI * 2, from = wheelAngle;
+    const to = from - (from % TAU) + TAU * 6 + (((-mid) % TAU) + TAU) % TAU;
+    const dur = reduceMotion() ? 1 : 3800, t0 = performance.now();
     spinning = true; lastPick = null;
     const btn = $("#spin"); if (btn) { btn.disabled = true; btn.textContent = "…"; }
     const step = (t) => {
       const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 4);
       wheelAngle = from + (to - from) * e; drawWheel();
       if (k < 1) requestAnimationFrame(step);
-      else { spinning = false; wheelAngle = to % (Math.PI * 2); lastPick = cands[idx].p.id; render(); $("#result")?.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" }); }
+      else { spinning = false; wheelAngle = to % TAU; lastPick = cands[idx].p.id; render(); $("#result")?.scrollIntoView({ block: "nearest", behavior: reduceMotion() ? "auto" : "smooth" }); }
     };
     requestAnimationFrame(step);
   }
 
   /* ---------- calendar ---------- */
   function viewCal() {
-    const first = new Date(calY, calM, 1);
-    const lead = (first.getDay() + 6) % 7;
+    const lead = (new Date(calY, calM, 1).getDay() + 6) % 7;
     const days = new Date(calY, calM + 1, 0).getDate();
     const byDay = {}; for (const m of meals) (byDay[m.date] ||= []).push(m);
     const t = todayStr();
@@ -535,7 +611,7 @@ h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
     for (let i = 0; i < lead; i++) cells.push(h("div", { class: "day out", "aria-hidden": "true" }));
     for (let d = 1; d <= days; d++) {
       const ds = ymd(new Date(calY, calM, d));
-      const ms = (byDay[ds] || []).sort((a, b) => SLOTS.findIndex((s) => s.k === a.slot) - SLOTS.findIndex((s) => s.k === b.slot));
+      const ms = (byDay[ds] || []).sort((a, b) => slotIdx(a) - slotIdx(b));
       cells.push(h("button", { class: "day" + (ds === t ? " today" : ""), "aria-pressed": String(ds === selDay), "aria-label": `${md(ds)}，${ms.length} 顿`, onclick: () => { selDay = ds; render(); } },
         h("span", { class: "n" }, d), h("span", { class: "em" }, ms.slice(0, 3).map((m) => cat(places[m.placeId]?.cat).em).join(""))));
     }
@@ -543,17 +619,16 @@ h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
     const monthMeals = meals.filter((m) => m.date.startsWith(monthKey));
     const mc = {}; for (const m of monthMeals) mc[m.placeId] = (mc[m.placeId] || 0) + 1;
     const top = Object.entries(mc).sort((a, b) => b[1] - a[1])[0];
-    const dayMeals = (byDay[selDay] || []).sort((a, b) => SLOTS.findIndex((s) => s.k === a.slot) - SLOTS.findIndex((s) => s.k === b.slot));
-
+    const dayMeals = (byDay[selDay] || []).sort((a, b) => slotIdx(a) - slotIdx(b));
     return [
       h("div", { class: "card cal" },
         h("div", { class: "cal-head" },
-          h("button", { class: "nav", "aria-label": "上个月", onclick: () => { calM--; if (calM < 0) { calM = 11; calY--; } render(); } }, "‹"),
+          h("button", { class: "nav", "aria-label": "上个月", onclick: () => { if (--calM < 0) { calM = 11; calY--; } render(); } }, "‹"),
           h("b", {}, `${calY}年${calM + 1}月`),
-          h("button", { class: "nav", "aria-label": "下个月", onclick: () => { calM++; if (calM > 11) { calM = 0; calY++; } render(); } }, "›")),
+          h("button", { class: "nav", "aria-label": "下个月", onclick: () => { if (++calM > 11) { calM = 0; calY++; } render(); } }, "›")),
         h("div", { class: "grid" }, "一二三四五六日".split("").map((x) => h("div", { class: "dow" }, x)), cells)),
-      h("p", { class: "muted", style: "margin:-8px 4px 0" }, monthMeals.length
-        ? `这个月吃了 ${monthMeals.length} 顿，最常去的是「${places[top[0]]?.name || "已删除"}」${top[1]} 次（${pct(top[1], monthMeals.length)}）`
+      h("p", { class: "muted", style: "margin:-6px 6px 0" }, monthMeals.length
+        ? `这个月吃了 ${monthMeals.length} 顿，最常去「${places[top[0]]?.name || "已删除"}」${top[1]} 次（${pct(top[1], monthMeals.length)}）`
         : (loaded.meals ? "这个月还没有记录" : "正在加载…")),
       h("div", { class: "sec-h" }, h("h2", {}, md(selDay)), h("span", {}, dayMeals.length ? `${dayMeals.length} 顿` : "")),
       h("div", { class: "card list" }, dayMeals.map(mealRow),
@@ -563,49 +638,44 @@ h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
 
   /* ---------- places ---------- */
   function viewPlaces() {
-    const cnt = countsByPlace(), total = meals.length;
-    const all = placeList();
+    const cnt = countsByPlace(), total = meals.length, all = placeList();
     const unlocked = all.filter(isUnlocked);
     const herN = meals.filter((m) => m.decidedBy === "her").length, himN = meals.filter((m) => m.decidedBy === "him").length;
     const filt = (p) => placeFilter === "all" || (p.cat || "other") === placeFilter;
-    const open = unlocked.filter(filt).sort((a, b) => (cnt[b.id] || 0) - (cnt[a.id] || 0) || (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
+    const open = unlocked.filter(filt).sort((a, b) => (cnt[b.id] || 0) - (cnt[a.id] || 0) || a.name.localeCompare(b.name));
     const locked = all.filter((p) => !isUnlocked(p) && filt(p)).sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
     const maxC = Math.max(1, ...open.map((p) => cnt[p.id] || 0));
-
     const prefChips = (p) => h("span", { class: "prefs" },
       p.prefHer ? h("span", { class: "pf " + p.prefHer }, `她${PREF[p.prefHer]}`) : null,
       p.prefHim ? h("span", { class: "pf " + p.prefHim }, `他${PREF[p.prefHim]}`) : null);
     const row = (p) => {
-      const c = cat(p.cat), n = cnt[p.id] || 0;
+      const c = cat(p.cat), n = cnt[p.id] || 0, st = dishStats(p.id);
+      const avg = st.length ? st.reduce((s, x) => s + x.sum, 0) / st.reduce((s, x) => s + x.n, 0) : null;
       return h("button", { class: "prow", style: `--cat:${catVar(p.cat)}`, onclick: () => openPlace(p) },
         h("span", { class: "ico" }, c.em),
-        h("span", { class: "row-main" }, h("b", {}, p.name), h("small", {}, `${c.name}${p.isDefault ? " · 常吃" : ""} `, prefChips(p))),
+        h("span", { class: "row-main" }, h("b", {}, p.name + (avg != null ? ` ${taste(avg)[0]}` : "")), h("small", {}, `${c.name}${p.isDefault ? " · 常吃" : ""} `, prefChips(p))),
         h("span", { class: "num" }, h("b", {}, `${n} 次`), h("small", {}, pct(n, total))),
         h("span", { class: "bar", "aria-hidden": "true" }, h("i", { style: `width:${n / maxC * 100}%` })));
     };
-    const lrow = (p) => {
-      const c = cat(p.cat);
-      return h("button", { class: "prow locked", onclick: () => openPlace(p) },
-        h("span", { class: "ico" }, c.em),
-        h("span", { class: "row-main" }, h("b", {}, p.name), h("small", {}, c.name + " ", prefChips(p))),
-        h("span", { class: "lock-tag" }, "🔒 吃一次解锁"));
-    };
+    const lrow = (p) => h("button", { class: "prow locked", onclick: () => openPlace(p) },
+      h("span", { class: "ico" }, cat(p.cat).em),
+      h("span", { class: "row-main" }, h("b", {}, p.name), h("small", {}, cat(p.cat).name + " ", prefChips(p))),
+      h("span", { class: "lock-tag" }, "🔒 吃一次解锁"));
     const chips = h("div", { class: "chips" },
       [{ k: "all", name: "全部" }, ...CATS].filter((c) => c.k === "all" || all.some((p) => (p.cat || "other") === c.k))
-        .map((c) => h("button", { class: "chip", "aria-pressed": String(placeFilter === c.k), onclick: () => { placeFilter = c.k; render(); } }, (c.em ? c.em + " " : "") + c.name)));
-
+        .map((c) => h("button", { class: "chip glass", "aria-pressed": String(placeFilter === c.k), onclick: () => { placeFilter = c.k; render(); } }, (c.em ? c.em + " " : "") + c.name)));
     return [
       h("div", { class: "card sum" },
         h("div", {}, h("b", {}, total), h("small", {}, "一共吃了几顿")),
         h("div", {}, h("b", {}, `${unlocked.length}/${all.length}`), h("small", {}, "已解锁餐厅")),
         h("div", {}, h("b", {}, `${herN}:${himN}`), h("small", {}, "她决定 : 他决定"))),
-      chips,
+      all.length ? chips : null,
       h("div", { class: "sec-h" }, h("h2", {}, "吃过的"), h("span", {}, "次数 · 每次吃到的概率")),
       open.length ? h("div", { class: "card list" }, open.map(row))
-        : h("div", { class: "card empty" }, h("strong", {}, loaded.places ? "还没有餐厅" : "正在加载…"), loaded.places ? h("span", {}, "点右下角 ＋ 加上你们平时常吃的几家。") : null),
+        : h("div", { class: "card empty" }, h("strong", {}, loaded.places ? "还没有餐厅" : "正在加载…"), loaded.places ? h("span", {}, "点右下角 ＋ 加上你们平时常吃的几家") : null),
       h("div", { class: "sec-h" }, h("h2", {}, "待解锁"), h("span", {}, locked.length ? `${locked.length} 家` : "")),
       locked.length ? h("div", { class: "card list" }, locked.map(lrow))
-        : h("div", { class: "card empty" }, h("span", {}, "想去但还没去过的地方放这里，第一次去吃就会解锁。")),
+        : h("div", { class: "card empty" }, h("span", {}, "想去但还没去过的地方放这里，第一次去吃就能解锁")),
     ];
   }
 
@@ -614,7 +684,7 @@ h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
   let onSave = null;
   function showSheet(title, body, saveFn) {
     $("#sheet-title").textContent = title;
-    $("#sheet-body").replaceChildren(...body);
+    $("#sheet-body").replaceChildren(...body.filter(Boolean));
     onSave = saveFn;
     sheet.hidden = false; scrim.hidden = false;
     requestAnimationFrame(() => requestAnimationFrame(() => { sheet.classList.add("on"); scrim.classList.add("on"); }));
@@ -622,12 +692,12 @@ h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
   }
   function closeSheet() {
     sheet.classList.remove("on"); scrim.classList.remove("on"); onSave = null;
-    setTimeout(() => { if (!sheet.classList.contains("on")) { sheet.hidden = true; scrim.hidden = true; } }, 340);
+    setTimeout(() => { if (!sheet.classList.contains("on")) { sheet.hidden = true; scrim.hidden = true; } }, 380);
   }
   $("#cancel").addEventListener("click", closeSheet);
   scrim.addEventListener("click", closeSheet);
   $("#save").addEventListener("click", async () => { if (!onSave) return; $("#save").disabled = true; try { await onSave(); } finally { $("#save").disabled = false; } });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { if (!sheet.hidden) closeSheet(); else if (!$("#unlock").hidden) closeUnlock(); } });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !sheet.hidden) closeSheet(); });
 
   const segCtl = (opts, cur, onPick) => {
     const box = h("div", { class: "seg" });
@@ -644,115 +714,211 @@ h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
     return b;
   };
 
-  function openMeal(m) {
+  let dishSeq = 0;
+  function dishEditor(d, onRemove) {
+    const id = `dish-${++dishSeq}`;
+    const face = h("span", {}, taste(d.score)[0]), word = h("em", { style: "font-style:normal" }, taste(d.score)[1]);
+    const range = h("input", { type: "range", id: id + "-s", min: "0", max: "100", step: "1", value: String(d.score), "aria-label": "好不好吃",
+      oninput: (e) => { d.score = +e.target.value; const [f, w] = taste(d.score); if (face.textContent !== f) { face.textContent = f; face.animate?.([{ transform: "scale(1.35)" }, { transform: "scale(1)" }], { duration: 220 }); } word.textContent = w; } });
+    return h("div", { class: "dish" },
+      h("div", { class: "dish-top" },
+        h("input", { id: id + "-n", value: d.name, placeholder: "吃了什么，比如 叉烧饭", "aria-label": "菜名", oninput: (e) => { d.name = e.target.value; } }),
+        h("button", { type: "button", class: "x", "aria-label": "删掉这道", onclick: onRemove }, "✕")),
+      h("div", { class: "taste" }, range, h("span", { class: "face" }, word, face),
+        h("div", { class: "taste-ends" }, h("span", {}, "不OK"), h("span", {}, "OK"))));
+  }
+
+  function openMeal(m, keep) {
     const editing = !!m.id;
-    const st = { date: m.date || todayStr(), slot: m.slot || defaultSlot(m.date), placeId: m.placeId || "", decidedBy: m.decidedBy || myRole };
-    const dateIn = h("input", { type: "date", id: "m-date", value: st.date, onchange: (e) => { st.date = e.target.value || st.date; } });
-    const listBox = h("div", { class: "card opt-list", role: "listbox", "aria-label": "选餐厅" });
-    const search = h("input", { type: "search", id: "m-q", placeholder: "搜索餐厅", autocomplete: "off", oninput: () => paintList() });
+    const st = keep || { date: m.date || todayStr(), slot: m.slot || defaultSlot(m.date), placeId: m.placeId || "", decidedBy: m.decidedBy || myRole,
+      dishes: (m.dishes || []).map((d) => ({ ...d })) };
+    if (!st.dishes.length) st.dishes.push({ name: "", score: 60 });
+    const dateIn = h("input", { class: "inp", type: "date", id: "m-date", value: st.date, onchange: (e) => { st.date = e.target.value || st.date; } });
+    const listBox = h("div", { class: "box opt-list", role: "listbox", "aria-label": "选餐厅" });
+    const search = h("input", { class: "inp", type: "search", id: "m-q", placeholder: "搜索餐厅", autocomplete: "off", oninput: () => paintList() });
     const cnt = countsByPlace();
     function paintList() {
       const q = search.value.trim().toLowerCase();
       const ps = placeList().filter((p) => !q || p.name.toLowerCase().includes(q) || cat(p.cat).name.includes(q))
-        .sort((a, b) => (cnt[b.id] || 0) - (cnt[a.id] || 0) || a.name.localeCompare(b.name));
-      listBox.replaceChildren(...(ps.length ? ps.map((p) => h("button", { type: "button", class: "opt", "aria-pressed": String(p.id === st.placeId),
-          onclick: () => { st.placeId = p.id; paintList(); } },
+        .sort((a, b) => (b.id === st.placeId) - (a.id === st.placeId) || (cnt[b.id] || 0) - (cnt[a.id] || 0) || a.name.localeCompare(b.name));
+      listBox.replaceChildren(
+        ...ps.map((p) => h("button", { type: "button", class: "opt", "aria-pressed": String(p.id === st.placeId), onclick: () => { st.placeId = p.id; paintList(); } },
           h("span", { class: "ico", style: `--cat:${catVar(p.cat)}` }, cat(p.cat).em),
-          h("span", { class: "row-main" }, h("b", {}, p.name), h("small", {}, cat(p.cat).name + (isUnlocked(p) ? "" : " · 🔒 第一次吃"))),
-          h("span", { class: "check" }, "✓")))
-        : [h("div", { class: "empty", style: "padding:16px" }, "没有找到，先到“餐厅”里添加")]));
+          h("span", { class: "row-main" }, h("b", {}, p.name), h("small", {}, cat(p.cat).name + (isUnlocked(p) ? "" : " · 🔒 第一次吃会解锁"))),
+          h("span", { class: "check" }, "✓"))),
+        h("button", { type: "button", class: "opt new", onclick: () => openPlace(null, (id) => { st.placeId = id; openMeal(m, st); }, search.value.trim()) },
+          h("span", { class: "ico" }, "＋"), h("span", { class: "row-main" }, h("b", {}, search.value.trim() ? `新餐厅「${search.value.trim()}」` : "新餐厅"))));
     }
     paintList();
-    const body = [
-      h("div", { class: "field" }, h("label", { class: "lbl", for: "m-date" }, "日期"), dateIn),
-      h("div", { class: "field" }, h("span", { class: "lbl" }, "哪一顿"), segCtl(SLOTS.map((s) => [s.k, s.name]), st.slot, (v) => { st.slot = v; })),
-      h("div", { class: "field" }, h("span", { class: "lbl" }, "吃了哪家"), search, listBox),
-      h("div", { class: "field" }, h("span", { class: "lbl" }, "最后谁决定的"), segCtl([["her", "她决定"], ["him", "他决定"]], st.decidedBy, (v) => { st.decidedBy = v; })),
-    ];
-    if (editing) body.push(delBtn(async () => { if (await write(() => db.collection("meals").doc(m.id).delete())) { closeSheet(); toast("已删除"); } }));
-    showSheet(editing ? "改一下这顿" : "记一顿", body, async () => {
-      if (!st.placeId) { toast("选一下吃了哪家"); return; }
+    const dishBox = h("div", { style: "display:flex;flex-direction:column;gap:10px" });
+    const paintDishes = () => dishBox.replaceChildren(...st.dishes.map((d, i) => dishEditor(d, () => { st.dishes.splice(i, 1); if (!st.dishes.length) st.dishes.push({ name: "", score: 60 }); paintDishes(); })),
+      h("button", { type: "button", class: "add-dish", onclick: () => { st.dishes.push({ name: "", score: 60 }); paintDishes(); dishBox.querySelectorAll(".dish-top input")[st.dishes.length - 1]?.focus(); } }, "＋ 再加一道"));
+    paintDishes();
+    showSheet(editing ? "改一下这顿" : "记一顿", [
+      h("div", { class: "fld" }, h("span", { class: "lbl" }, "吃了哪家"), search, listBox),
+      h("div", { class: "fld" }, h("span", { class: "lbl" }, "吃了什么 · 滑一下 OK 不 OK"), dishBox),
+      h("div", { class: "fld" }, h("label", { class: "lbl", for: "m-date" }, "日期"), dateIn),
+      h("div", { class: "fld" }, h("span", { class: "lbl" }, "哪一顿"), segCtl(SLOTS.map((s) => [s.k, s.name]), st.slot, (v) => { st.slot = v; })),
+      h("div", { class: "fld" }, h("span", { class: "lbl" }, "最后谁决定的"), segCtl([["her", "她决定"], ["him", "他决定"]], st.decidedBy, (v) => { st.decidedBy = v; })),
+      editing ? delBtn(async () => { if (await write(() => db.collection("meals").doc(m.id).delete())) { closeSheet(); toast("已删除"); } }) : null,
+    ], async () => {
+      if (!st.placeId || !places[st.placeId]) { toast("选一下吃了哪家"); return; }
       const id = `${st.date}_${st.slot}`;
-      const data = { date: st.date, slot: st.slot, placeId: st.placeId, decidedBy: st.decidedBy, by: me, at: new Date().toISOString() };
+      const p = places[st.placeId], wasLocked = !isUnlocked(p);
+      const data = { date: st.date, slot: st.slot, placeId: st.placeId, decidedBy: st.decidedBy, by: me, at: new Date().toISOString(),
+        dishes: st.dishes.map((d) => ({ name: d.name.trim(), score: d.score })).filter((d) => d.name) };
       const ok = await write(async () => {
         if (editing && m.id !== id) await db.collection("meals").doc(m.id).delete();
         await db.collection("meals").doc(id).set(data);
-        const p = places[st.placeId];
-        if (p && !isUnlocked(p)) await db.collection("places").doc(p.id).update({ unlockedAt: data.at });
+        if (wasLocked) await db.collection("places").doc(p.id).update({ unlockedAt: data.at });
       });
-      if (ok) { closeSheet(); lastPick = null; toast(`记下了：${SLOT[st.slot]} · ${places[st.placeId]?.name || ""}`); }
+      if (!ok) return;
+      closeSheet(); lastPick = null;
+      if (wasLocked) setTimeout(() => celebrate({ ...p, unlockedAt: data.at }), 380);
+      else toast(`记下了：${SLOT[st.slot]} · ${p.name}`);
     });
   }
   function defaultSlot(date) {
-    const hr = new Date().getHours();
+    const hr = new Date().getHours(), d = date || todayStr();
     const s = hr < 16 ? "lunch" : hr < 22 ? "dinner" : "late";
-    const d = date || todayStr();
     if (!meals.some((m) => m.date === d && m.slot === s)) return s;
     return SLOTS.find((x) => !meals.some((m) => m.date === d && m.slot === x.k))?.k || s;
   }
 
-  function openPlace(p) {
+  function openPlace(p, done, presetName) {
     const editing = !!p?.id;
-    const st = { name: p?.name || "", cat: p?.cat || (placeFilter !== "all" ? placeFilter : "zh"), isDefault: !!p?.isDefault, prefHer: p?.prefHer || "", prefHim: p?.prefHim || "" };
-    const nameIn = h("input", { type: "text", id: "p-name", value: st.name, placeholder: "餐厅名字", oninput: (e) => { st.name = e.target.value; } });
+    const st = { name: p?.name || presetName || "", cat: p?.cat || (placeFilter !== "all" ? placeFilter : wheelCat !== "all" ? wheelCat : "zh"),
+      isDefault: !!p?.isDefault, prefHer: p?.prefHer || "", prefHim: p?.prefHim || "" };
+    const nameIn = h("input", { class: "inp", id: "p-name", value: st.name, placeholder: "餐厅名字", oninput: (e) => { st.name = e.target.value; } });
     const catBox = h("div", { class: "chipgrid" });
     const paintCat = () => catBox.replaceChildren(...CATS.map((c) => h("button", { type: "button", class: "chip", "aria-pressed": String(st.cat === c.k), onclick: () => { st.cat = c.k; paintCat(); } }, `${c.em} ${c.name}`)));
     paintCat();
     const prefOpts = [["love", "爱吃"], ["ok", "还行"], ["no", "不想吃"]];
     const n = editing ? (countsByPlace()[p.id] || 0) : 0;
-    const body = [
-      h("div", { class: "field" }, h("label", { class: "lbl", for: "p-name" }, "名字"), nameIn),
-      h("div", { class: "field" }, h("span", { class: "lbl" }, "分类"), catBox),
-      h("label", { class: "toggle-card toggle-row" }, h("span", {}, "常吃的店", h("small", {}, "平时就会去，不用解锁")),
+    const ds = editing ? dishStats(p.id) : [];
+    showSheet(editing ? "编辑餐厅" : "添加餐厅", [
+      h("div", { class: "fld" }, h("label", { class: "lbl", for: "p-name" }, "名字"), nameIn),
+      h("div", { class: "fld" }, h("span", { class: "lbl" }, "分类"), catBox),
+      h("label", { class: "toggle-row" }, h("span", {}, "已经常吃了", h("small", {}, "打开就直接解锁；关着的话，第一次去吃会有解锁动画")),
         h("span", { class: "switch" }, h("input", { type: "checkbox", id: "p-default", checked: st.isDefault, onchange: (e) => { st.isDefault = e.target.checked; } }), h("i"))),
-      h("div", { class: "field" }, h("span", { class: "lbl" }, "喜好（转盘会照这个来：爱吃的更容易转到，不想吃的不会出现）"),
+      h("div", { class: "fld" }, h("span", { class: "lbl" }, "喜好 · 爱吃的在转盘上格子更大"),
         h("div", { class: "pref-row" }, h("span", {}, "她"), segCtl(prefOpts, st.prefHer, (v) => { st.prefHer = v; })),
         h("div", { class: "pref-row" }, h("span", {}, "他"), segCtl(prefOpts, st.prefHim, (v) => { st.prefHim = v; }))),
-    ];
-    if (editing) body.push(
-      h("p", { class: "muted", style: "margin:0 14px" }, n ? `吃过 ${n} 次，占全部的 ${pct(n, meals.length)}${p.unlockedAt && !p.isDefault ? `，${md(p.unlockedAt.slice(0, 10))}解锁` : ""}` : (isUnlocked(p) ? "还没有记录" : "🔒 还没解锁，第一次去吃就会解锁")),
-      delBtn(async () => { if (await write(() => db.collection("places").doc(p.id).delete())) { closeSheet(); toast("已删除"); } }));
-    showSheet(editing ? "编辑餐厅" : "添加餐厅", body, async () => {
+      ds.length ? h("div", { class: "fld" }, h("span", { class: "lbl" }, "在这家点过的"),
+        h("div", { class: "box dish-stats" }, ds.map((x) => h("div", {}, h("span", { style: "font-size:20px" }, taste(x.avg)[0]), h("b", {}, x.name), h("small", {}, `${taste(x.avg)[1]} · ${x.n} 次`))))) : null,
+      editing ? h("p", { class: "muted", style: "margin:0 14px" }, n ? `吃过 ${n} 次，占全部的 ${pct(n, meals.length)}` : (isUnlocked(p) ? "还没有记录" : "🔒 还没解锁，第一次去吃就能解锁")) : null,
+      editing ? delBtn(async () => { if (await write(() => db.collection("places").doc(p.id).delete())) { closeSheet(); toast("已删除"); } }) : null,
+    ], async () => {
       const name = st.name.trim();
       if (!name) { toast("写一下餐厅名字"); return; }
       const t = new Date().toISOString();
       const data = { name, cat: st.cat, isDefault: st.isDefault, prefHer: st.prefHer, prefHim: st.prefHim };
-      const ok = await write(() => editing
-        ? db.collection("places").doc(p.id).update({ ...data, updatedAt: t, updatedBy: me })
-        : db.collection("places").add({ ...data, createdAt: t, createdBy: me, unlockedAt: st.isDefault ? t : null }));
-      if (ok) { closeSheet(); toast(editing ? "已更新" : (st.isDefault ? "已添加" : "已添加到待解锁")); }
+      let newId = null;
+      const ok = await write(async () => {
+        if (editing) {
+          const upd = { ...data, updatedAt: t, updatedBy: me };
+          if (st.isDefault && !p.unlockedAt) upd.unlockedAt = t;
+          await db.collection("places").doc(p.id).update(upd);
+        } else {
+          const ref = db.collection("places").doc(); newId = ref.id;
+          await ref.set({ ...data, createdAt: t, createdBy: me, unlockedAt: st.isDefault ? t : null });
+        }
+      });
+      if (!ok) return;
+      if (newId) { places[newId] = { id: newId, ...data, createdAt: t, unlockedAt: st.isDefault ? t : null }; seenUnlock.delete(newId); }
+      if (done) { done(newId || p.id); toast(st.isDefault || editing ? "已添加" : "已添加 · 吃完这顿就解锁"); return; }
+      closeSheet(); toast(editing ? "已更新" : (st.isDefault ? "已添加到转盘" : "已添加到转盘 · 第一次去吃会解锁"));
     });
+    if (!editing) setTimeout(() => nameIn.focus({ preventScroll: true }), 420);
   }
 
-  /* ---------- unlock moment ---------- */
+  /* ---------- hold-to-unlock moment ---------- */
   const seenUnlock = new Set();
-  let confettiRAF = 0;
+  const unlockQueue = [];
+  let confettiRAF = 0, unlockOpen = false;
+  const HOLD_MS = 1200, RING = 364.4;
   function celebrate(p) {
     if (seenUnlock.has(p.id)) return; seenUnlock.add(p.id);
-    const c = cat(p.cat);
+    if (unlockOpen) { unlockQueue.push(p); return; }
+    unlockOpen = true;
+    const c = cat(p.cat), u = $("#unlock");
     $("#u-name").textContent = `${c.em} ${p.name}`;
-    $("#u-meta").textContent = `${c.name} · 你们解锁的第 ${placeList().filter(isUnlocked).length} 家`;
-    const u = $("#unlock"); u.hidden = false; u.classList.remove("on");
-    void u.offsetWidth;
+    $("#u-eyebrow").textContent = "发现新地方";
+    $("#u-meta").textContent = `${c.name} · 第一次来吃`;
+    $("#u-hint").textContent = "按住锁头解锁";
+    $("#u-ok").hidden = true; $("#u-hold").hidden = false; $("#u-hold").disabled = false;
+    setProg(0);
+    u.classList.remove("on", "done"); u.hidden = false; void u.offsetWidth;
     requestAnimationFrame(() => u.classList.add("on"));
-    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) setTimeout(confetti, 600);
-    $("#u-ok").focus({ preventScroll: true });
+    setTimeout(() => $("#u-hold").focus({ preventScroll: true }), 300);
+    u.dataset.count = placeList().filter((x) => x.id !== p.id && isUnlocked(x)).length + 1;
+  }
+  let prog = 0, holding = false, lastT = 0, holdRAF = 0;
+  function setProg(v) {
+    prog = v;
+    $("#u-prog").setAttribute("stroke-dashoffset", String(RING * (1 - v)));
+    $("#u-hold").style.setProperty("--p", v.toFixed(3));
+  }
+  function holdLoop(t) {
+    const dt = lastT ? t - lastT : 16; lastT = t;
+    let v = prog + (holding ? dt / HOLD_MS : -dt / 500);
+    v = Math.max(0, Math.min(1, v)); setProg(v);
+    if (holding && v > .25) try { navigator.vibrate?.(8); } catch {}
+    if (v >= 1) { finishUnlock(); return; }
+    if (holding || v > 0) holdRAF = requestAnimationFrame(holdLoop); else holdRAF = 0;
+  }
+  function startHold(e) {
+    if ($("#unlock").classList.contains("done")) return;
+    e?.preventDefault?.();
+    holding = true; $("#u-hold").classList.add("holding"); $("#u-hint").textContent = "继续按住…";
+    if (!holdRAF) { lastT = 0; holdRAF = requestAnimationFrame(holdLoop); }
+  }
+  function endHold() {
+    if (!holding) return;
+    holding = false; $("#u-hold").classList.remove("holding");
+    if (!$("#unlock").classList.contains("done")) $("#u-hint").textContent = "差一点！再按久一点";
+    if (!holdRAF) { lastT = 0; holdRAF = requestAnimationFrame(holdLoop); }
+  }
+  function finishUnlock() {
+    holding = false; cancelAnimationFrame(holdRAF); holdRAF = 0;
+    const u = $("#unlock"), hold = $("#u-hold");
+    hold.classList.remove("holding"); u.classList.add("done"); setProg(1);
+    try { navigator.vibrate?.([20, 40, 30]); } catch {}
+    $("#u-eyebrow").textContent = "解锁成功！";
+    $("#u-meta").textContent = `你们解锁的第 ${u.dataset.count || "?"} 家`;
+    $("#u-hint").textContent = "";
+    $("#u-ok").hidden = false;
+    setTimeout(() => $("#u-ok").focus({ preventScroll: true }), 50);
+    if (!reduceMotion()) confetti();
   }
   function closeUnlock() {
     const u = $("#unlock"); u.classList.remove("on"); cancelAnimationFrame(confettiRAF);
-    setTimeout(() => { if (!u.classList.contains("on")) u.hidden = true; }, 300);
+    setTimeout(() => {
+      u.hidden = true; u.classList.remove("done"); unlockOpen = false;
+      const nx = unlockQueue.shift(); if (nx) { seenUnlock.delete(nx.id); celebrate(nx); }
+    }, 320);
   }
+  const hold = $("#u-hold");
+  hold.addEventListener("pointerdown", (e) => { hold.setPointerCapture?.(e.pointerId); startHold(e); });
+  hold.addEventListener("pointerup", endHold);
+  hold.addEventListener("pointercancel", endHold);
+  hold.addEventListener("contextmenu", (e) => e.preventDefault());
+  hold.addEventListener("keydown", (e) => { if ((e.key === " " || e.key === "Enter") && !e.repeat) startHold(e); });
+  hold.addEventListener("keyup", (e) => { if (e.key === " " || e.key === "Enter") endHold(); });
   $("#u-ok").addEventListener("click", closeUnlock);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#unlock").hidden && $("#unlock").classList.contains("done")) closeUnlock(); });
+
   function confetti() {
     const cv = $("#confetti"), ctx = cv.getContext("2d");
     const dpr = Math.min(2, devicePixelRatio || 1);
-    cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; ctx.scale(dpr, dpr);
+    cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const cs = getComputedStyle(document.documentElement);
     const cols = ["--gold", "--accent", "--c-xi", "--c-th", "--c-kr", "--c-fast"].map((v) => cs.getPropertyValue(v).trim());
-    const cx = innerWidth / 2, cy = innerHeight / 2 - 60;
-    const ps = Array.from({ length: 140 }, () => {
-      const a = Math.random() * Math.PI * 2, sp = 4 + Math.random() * 9;
-      return { x: cx, y: cy, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 4, r: Math.random() * Math.PI, vr: (Math.random() - .5) * .3, w: 6 + Math.random() * 6, h: 3 + Math.random() * 4, c: cols[(Math.random() * cols.length) | 0], life: 1 };
+    const r = $("#u-hold").getBoundingClientRect();
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    const ps = Array.from({ length: 160 }, () => {
+      const a = Math.random() * Math.PI * 2, sp = 4 + Math.random() * 10;
+      return { x: cx, y: cy, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 5, r: Math.random() * 3, vr: (Math.random() - .5) * .35, w: 6 + Math.random() * 7, h: 3 + Math.random() * 4, c: cols[(Math.random() * cols.length) | 0], life: 1, round: Math.random() < .3 };
     });
     const step = () => {
       ctx.clearRect(0, 0, innerWidth, innerHeight);
@@ -760,8 +926,9 @@ h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
       for (const p of ps) {
         p.vy += .22; p.vx *= .985; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life -= .006;
         if (p.life <= 0 || p.y > innerHeight + 20) continue; alive++;
-        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.globalAlpha = Math.min(1, p.life * 1.5);
-        ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore();
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.globalAlpha = Math.min(1, p.life * 1.5); ctx.fillStyle = p.c;
+        if (p.round) { ctx.beginPath(); ctx.arc(0, 0, p.h, 0, Math.PI * 2); ctx.fill(); } else ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
       }
       if (alive) confettiRAF = requestAnimationFrame(step); else ctx.clearRect(0, 0, innerWidth, innerHeight);
     };
@@ -797,7 +964,7 @@ h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
       for (const doc of snap.docs) next[doc.id] = { id: doc.id, ...doc.data() };
       if (!first) for (const p of Object.values(next)) {
         const prev = places[p.id];
-        if (prev && !isUnlocked(prev) && isUnlocked(p) && !p.isDefault) setTimeout(() => celebrate(p), 350);
+        if (prev && !isUnlocked(prev) && isUnlocked(p) && !p.isDefault) setTimeout(() => celebrate(p), 400);
       }
       first = false; places = next; loaded.places = true;
       if (!spinning) render();
