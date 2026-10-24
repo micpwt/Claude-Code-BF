@@ -1,0 +1,543 @@
+<title>我们的小本本</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: iOS-style single column — large title, grouped inset lists, floating glass tab bar + add button, bottom sheet editor */
+:root {
+  --bg: #F2F2F7;
+  --card: #FFFFFF;
+  --fill: rgba(118,118,128,.12);
+  --label: #000000;
+  --label2: rgba(60,60,67,.62);
+  --label3: rgba(60,60,67,.32);
+  --sep: rgba(60,60,67,.18);
+  --accent: #F2355B;
+  --accent-soft: rgba(242,53,91,.12);
+  --green: #24A148;
+  --green-soft: rgba(36,161,72,.12);
+  --red: #E5352B;
+  --red-soft: rgba(229,53,43,.10);
+  --orange: #E8820C;
+  --orange-soft: rgba(232,130,12,.13);
+  --glass: rgba(255,255,255,.72);
+  --glass-edge: rgba(255,255,255,.9);
+  --shadow: 0 8px 30px rgba(0,0,0,.10), 0 1px 3px rgba(0,0,0,.06);
+  --scrim: rgba(0,0,0,.28);
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Noto Sans SC", "Helvetica Neue", system-ui, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
+  --r-card: 22px;
+  --r-ctl: 14px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #000000; --card: #1C1C1E; --fill: rgba(118,118,128,.24);
+  --label: #FFFFFF; --label2: rgba(235,235,245,.62); --label3: rgba(235,235,245,.3); --sep: rgba(84,84,88,.55);
+  --accent: #FF4F72; --accent-soft: rgba(255,79,114,.18);
+  --green: #3DD26A; --green-soft: rgba(61,210,106,.16); --red: #FF5A50; --red-soft: rgba(255,90,80,.16);
+  --orange: #FFA53A; --orange-soft: rgba(255,165,58,.16);
+  --glass: rgba(44,44,48,.66); --glass-edge: rgba(255,255,255,.14);
+  --shadow: 0 8px 30px rgba(0,0,0,.5), 0 1px 3px rgba(0,0,0,.4); --scrim: rgba(0,0,0,.55);
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #000000; --card: #1C1C1E; --fill: rgba(118,118,128,.24);
+  --label: #FFFFFF; --label2: rgba(235,235,245,.62); --label3: rgba(235,235,245,.3); --sep: rgba(84,84,88,.55);
+  --accent: #FF4F72; --accent-soft: rgba(255,79,114,.18);
+  --green: #3DD26A; --green-soft: rgba(61,210,106,.16); --red: #FF5A50; --red-soft: rgba(255,90,80,.16);
+  --orange: #FFA53A; --orange-soft: rgba(255,165,58,.16);
+  --glass: rgba(44,44,48,.66); --glass-edge: rgba(255,255,255,.14);
+  --shadow: 0 8px 30px rgba(0,0,0,.5), 0 1px 3px rgba(0,0,0,.4); --scrim: rgba(0,0,0,.55);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { background: var(--bg); color: var(--label); }
+body { font-family: var(--font); font-size: 16px; line-height: 1.4; -webkit-font-smoothing: antialiased; }
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; padding: 0; }
+:focus-visible { outline: 2.5px solid var(--accent); outline-offset: 2px; border-radius: 10px; }
+
+.wrap {
+  max-width: 640px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 18px 140px;
+  display: flex; flex-direction: column; gap: 22px;
+}
+
+/* Large title header */
+.top { display: flex; flex-direction: column; gap: 4px; padding-top: 18px; }
+.eyebrow { font-size: 13px; font-weight: 600; color: var(--accent); letter-spacing: .02em; }
+h1 { font-family: var(--font-display); font-size: 34px; line-height: 1.12; font-weight: 700; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
+.sub { color: var(--label2); font-size: 15px; margin: 2px 0 0; }
+
+.search {
+  display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px;
+  background: var(--fill); border-radius: 12px; color: var(--label2);
+}
+.search input { flex: 1; min-width: 0; border: 0; background: none; outline: none; font-size: 16px; color: var(--label); }
+.search input::placeholder { color: var(--label2); }
+.search svg { flex: none; }
+
+/* Segmented control */
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--fill); border-radius: 12px; padding: 3px; gap: 2px; }
+.seg button { height: 32px; border-radius: 9px; font-size: 14px; font-weight: 500; color: var(--label); transition: background .2s; }
+.seg button[aria-pressed="true"] { background: var(--card); box-shadow: 0 2px 8px rgba(0,0,0,.12); font-weight: 600; }
+
+.section-h { display: flex; align-items: baseline; justify-content: space-between; padding: 0 4px; margin-bottom: -12px; }
+.section-h h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
+.section-h span { font-size: 13px; color: var(--label2); font-variant-numeric: tabular-nums; }
+
+/* Rule cards */
+.cards { display: flex; flex-direction: column; gap: 12px; }
+.card {
+  background: var(--card); border-radius: var(--r-card); padding: 16px 16px 12px;
+  display: flex; flex-direction: column; gap: 10px; text-align: left; width: 100%;
+  transition: transform .18s ease;
+}
+.card:active { transform: scale(.985); }
+.card.urgent { box-shadow: inset 0 0 0 1.5px var(--accent); }
+.card-when { display: flex; gap: 8px; align-items: flex-start; }
+.card-when b { font-size: 17px; font-weight: 600; line-height: 1.35; min-width: 0; }
+.tag { flex: none; font-size: 11px; font-weight: 700; color: var(--accent); background: var(--accent-soft); padding: 3px 7px; border-radius: 99px; margin-top: 2px; letter-spacing: .03em; }
+.line { display: grid; grid-template-columns: 22px 1fr; gap: 6px; font-size: 15px; line-height: 1.45; }
+.line .dot { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+.line.do .dot { background: var(--green-soft); color: var(--green); }
+.line.dont .dot { background: var(--red-soft); color: var(--red); }
+.line p { margin: 1px 0 0; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; border-top: .5px solid var(--sep); padding-top: 10px; margin-top: 2px; }
+.who { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--label2); min-width: 0; }
+.who img { width: 18px; height: 18px; border-radius: 50%; flex: none; }
+.who span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.again {
+  flex: none; display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px;
+  border-radius: 99px; background: var(--orange-soft); color: var(--orange); font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums;
+}
+.again.zero { background: var(--fill); color: var(--label2); }
+
+/* Grouped list */
+.list { background: var(--card); border-radius: var(--r-card); overflow: hidden; }
+.row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; width: 100%; text-align: left; position: relative; }
+.row + .row::before { content: ""; position: absolute; top: 0; left: 60px; right: 0; border-top: .5px solid var(--sep); }
+.row:active { background: var(--fill); }
+.ico { flex: none; width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; font-size: 16px; font-weight: 700; }
+.ico.like { background: var(--green-soft); color: var(--green); }
+.ico.dislike { background: var(--red-soft); color: var(--red); }
+.ico.wish { background: var(--accent-soft); color: var(--accent); }
+.ico.log { white-space: pre-line; background: var(--orange-soft); color: var(--orange); font-size: 11px; line-height: 1.05; text-align: center; font-variant-numeric: tabular-nums; }
+.row-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.row-main b { font-weight: 500; font-size: 16px; overflow-wrap: anywhere; }
+.row-main small { color: var(--label2); font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.row-main .next { color: var(--green); }
+.chev { flex: none; color: var(--label3); }
+
+.empty { background: var(--card); border-radius: var(--r-card); padding: 26px 20px; text-align: center; color: var(--label2); font-size: 15px; display: flex; flex-direction: column; gap: 6px; align-items: center; }
+.empty strong { color: var(--label); font-size: 17px; font-weight: 600; }
+
+.banner { background: var(--orange-soft); color: var(--label); border-radius: 16px; padding: 12px 14px; font-size: 14px; }
+
+/* Floating glass chrome */
+.glass {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(24px) saturate(190%); backdrop-filter: blur(24px) saturate(190%);
+  box-shadow: var(--shadow), inset 0 0 0 .5px var(--glass-edge);
+}
+.dock {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; pointer-events: none;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+}
+.dock-in { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+.tabs { pointer-events: auto; display: flex; padding: 5px; border-radius: 99px; gap: 2px; }
+.tabs button { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 6px 18px 5px; border-radius: 99px; color: var(--label); font-size: 11px; font-weight: 600; min-width: 68px; }
+.tabs button svg { width: 24px; height: 24px; }
+.tabs button[aria-selected="true"] { color: var(--accent); background: var(--fill); }
+.fab { pointer-events: auto; width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; color: var(--accent); flex: none; }
+.fab:active, .tabs button:active { transform: scale(.94); }
+
+/* Sheet */
+.scrim { position: fixed; inset: 0; background: var(--scrim); z-index: 30; opacity: 0; transition: opacity .25s; }
+.scrim.on { opacity: 1; }
+.sheet {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 31; max-height: 92%;
+  display: flex; flex-direction: column;
+  background: var(--bg); border-radius: 26px 26px 0 0; box-shadow: var(--shadow);
+  transform: translateY(105%); transition: transform .34s cubic-bezier(.2,.9,.25,1);
+  max-width: 680px; margin: 0 auto;
+}
+.sheet.on { transform: none; }
+.grab { width: 38px; height: 5px; border-radius: 3px; background: var(--label3); margin: 8px auto 0; flex: none; }
+.sheet-bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 8px 16px 6px; flex: none; }
+.sheet-bar h3 { margin: 0; font-size: 17px; font-weight: 600; }
+.sheet-bar .l { justify-self: start; } .sheet-bar .r { justify-self: end; }
+.pill { height: 36px; padding: 0 16px; border-radius: 99px; background: var(--fill); font-size: 16px; font-weight: 500; }
+.pill.primary { background: var(--accent); color: #fff; font-weight: 600; }
+.pill:disabled { opacity: .45; }
+.sheet-body {
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 10px calc(28px + env(safe-area-inset-bottom, 0px));
+  display: flex; flex-direction: column; gap: 18px;
+}
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label, .field .lbl { font-size: 13px; color: var(--label2); padding: 0 14px; letter-spacing: .02em; }
+.field input, .field textarea {
+  width: 100%; border: 0; outline: none; background: var(--card); border-radius: var(--r-ctl);
+  padding: 13px 14px; font-size: 16px; resize: none; min-height: 48px; color: var(--label);
+}
+.field textarea { min-height: 84px; line-height: 1.45; }
+.field input:focus, .field textarea:focus { box-shadow: inset 0 0 0 1.5px var(--accent); }
+.field .hint { font-size: 12px; color: var(--label2); padding: 0 14px; }
+.toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--card); border-radius: var(--r-ctl); padding: 10px 14px; min-height: 52px; }
+.toggle-row span { font-size: 16px; }
+.toggle-row small { display: block; font-size: 13px; color: var(--label2); }
+.switch { position: relative; width: 51px; height: 31px; flex: none; }
+.switch input { opacity: 0; position: absolute; inset: 0; margin: 0; cursor: pointer; }
+.switch i { position: absolute; inset: 0; border-radius: 99px; background: var(--fill); transition: background .2s; pointer-events: none; }
+.switch i::after { content: ""; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.2); transition: transform .22s; }
+.switch input:checked + i { background: var(--green); }
+.switch input:checked + i::after { transform: translateX(20px); }
+.stepper { display: flex; align-items: center; background: var(--fill); border-radius: 10px; flex: none; }
+.stepper button { width: 44px; height: 32px; font-size: 20px; font-weight: 500; }
+.stepper output { min-width: 28px; text-align: center; font-variant-numeric: tabular-nums; font-weight: 600; }
+.danger { background: var(--card); color: var(--red); border-radius: var(--r-ctl); height: 50px; font-size: 16px; font-weight: 500; width: 100%; }
+.danger.confirm { background: var(--red); color: #fff; font-weight: 600; }
+
+.toast {
+  position: fixed; left: 50%; top: calc(14px + env(safe-area-inset-top, 0px)); z-index: 40;
+  transform: translate(-50%, -140%); transition: transform .3s cubic-bezier(.2,.9,.25,1);
+  padding: 10px 18px; border-radius: 99px; font-size: 14px; font-weight: 600; max-width: calc(100% - 32px); text-align: center;
+}
+.toast.on { transform: translate(-50%, 0); }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<main class="wrap" id="app">
+  <header class="top">
+    <div class="eyebrow" id="eyebrow">情侣使用说明书</div>
+    <h1 id="title">攻略</h1>
+    <p class="sub" id="subtitle">遇到这种情况，就这样做。</p>
+  </header>
+  <div class="search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="搜索" autocomplete="off"></div>
+  <div id="notice" hidden></div>
+  <div id="view"></div>
+</main>
+
+<nav class="dock" aria-label="主导航">
+  <div class="dock-in">
+    <div class="tabs glass" role="tablist">
+      <button role="tab" data-tab="rules" aria-selected="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>攻略</button>
+      <button role="tab" data-tab="prefs" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.2a4.3 4.3 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z"/></svg>喜好</button>
+      <button role="tab" data-tab="logs" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>记录</button>
+    </div>
+    <button class="fab glass" id="add" aria-label="新增">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+  </div>
+</nav>
+
+<div class="scrim" id="scrim" hidden></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" hidden>
+  <div class="grab"></div>
+  <div class="sheet-bar">
+    <button class="pill l" id="cancel">取消</button>
+    <h3 id="sheet-title">新增</h3>
+    <button class="pill primary r" id="save">完成</button>
+  </div>
+  <form class="sheet-body" id="form" autocomplete="off">
+    <div data-for="rule" class="field"><label for="f-when">遇到这种情况</label><textarea id="f-when" rows="2" placeholder="比如：她刚睡醒、肚子饿、心情不好"></textarea></div>
+    <div data-for="rule" class="field"><label for="f-do">✓ 这样做</label><textarea id="f-do" rows="3" placeholder="比如：先给她吃点东西，再给 2–3 个餐厅选项"></textarea></div>
+    <div data-for="rule" class="field"><label for="f-dont">✕ 不要这样</label><textarea id="f-dont" rows="2" placeholder="比如：说“奖励你”然后去天天吃的茶室"></textarea></div>
+    <div data-for="rule" class="toggle-row"><span>紧急 · 置顶<small>最容易惹她生气的放最上面</small></span><label class="switch"><input type="checkbox" id="f-pin" aria-label="紧急置顶"><i></i></label></div>
+    <div data-for="rule" class="toggle-row"><span>又犯了几次<small>说过之后还重复的次数</small></span>
+      <div class="stepper"><button type="button" id="rep-minus" aria-label="减一">−</button><output id="f-repeat">0</output><button type="button" id="rep-plus" aria-label="加一">+</button></div></div>
+
+    <div data-for="pref" class="field"><span class="lbl">分类</span>
+      <div class="seg" id="f-kind">
+        <button type="button" data-k="like" aria-pressed="false">喜欢</button>
+        <button type="button" data-k="dislike" aria-pressed="false">雷区</button>
+        <button type="button" data-k="wish" aria-pressed="false">想去</button>
+      </div></div>
+    <div data-for="pref" class="field"><label for="f-name">名字</label><input id="f-name" placeholder="餐厅、食物、礼物、地方…"></div>
+    <div data-for="pref" class="field"><label for="f-note">备注</label><textarea id="f-note" rows="2" placeholder="为什么喜欢 / 为什么不行"></textarea></div>
+
+    <div data-for="log" class="field"><label for="f-date">日期</label><input id="f-date" type="date"></div>
+    <div data-for="log" class="field"><label for="f-what">发生了什么</label><textarea id="f-what" rows="3" placeholder="简单写下经过"></textarea></div>
+    <div data-for="log" class="field"><label for="f-next">下次怎么做</label><textarea id="f-next" rows="2" placeholder="写清楚，下次就照着做"></textarea></div>
+
+    <button type="button" class="danger" id="del" hidden>删除</button>
+  </form>
+</section>
+
+<div class="toast glass" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const h = (tag, props = {}, ...kids) => {
+    const el = document.createElement(tag);
+    for (const [k, v] of Object.entries(props)) {
+      if (v == null || v === false) continue;
+      if (k === "class") el.className = v;
+      else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+      else el.setAttribute(k, v === true ? "" : v);
+    }
+    for (const c of kids.flat()) if (c != null && c !== false) el.append(c.nodeType ? c : document.createTextNode(String(c)));
+    return el;
+  };
+
+  const TABS = {
+    rules: { title: "攻略", sub: "遇到这种情况，就这样做。" },
+    prefs: { title: "喜好", sub: "喜欢的、踩雷的、一直想去的。" },
+    logs:  { title: "记录", sub: "发生过的事，同样的错别犯第二次。" },
+  };
+  const PREF = {
+    like:    { label: "喜欢", mark: "♥", sub: "可以放心带她去" },
+    dislike: { label: "雷区", mark: "✕", sub: "不要提，更别当“奖励”" },
+    wish:    { label: "想去", mark: "★", sub: "说“带你吃好的”就从这里挑" },
+  };
+
+  let tab = ["rules", "prefs", "logs"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "rules";
+  let prefKind = "like";
+  let items = [];
+  let loaded = false;
+  let db = null, user = null, me = null, col = null;
+  let readOnly = false;
+  let profiles = {};
+
+  const fmtDate = (iso) => {
+    if (!iso) return "";
+    const d = new Date(iso.length === 10 ? iso + "T12:00:00" : iso);
+    return isNaN(d) ? "" : `${d.getMonth() + 1}月${d.getDate()}日`;
+  };
+  const today = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10); };
+
+  let toastT;
+  function toast(msg) {
+    const t = $("#toast"); t.textContent = msg; t.classList.add("on");
+    clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), 2200);
+  }
+
+  function who(it) {
+    const id = it.updatedBy || it.author;
+    if (!id) return h("div", { class: "who" }, h("span", {}, "初始指南"));
+    const p = profiles[id];
+    const name = p?.isMe ? "我" : (p?.name || "TA");
+    return h("div", { class: "who" }, p ? h("img", { src: p.avatarUrl, alt: "" }) : null,
+      h("span", {}, `${name} · ${fmtDate(it.updatedAt || it.createdAt)}`));
+  }
+
+  function matches(it, q) {
+    if (!q) return true;
+    return [it.when, it.do, it.dont, it.name, it.note, it.what, it.next].some((s) => s && s.toLowerCase().includes(q));
+  }
+
+  function emptyCard(title, body) {
+    return h("div", { class: "empty" }, h("strong", {}, title), h("span", {}, body));
+  }
+
+  function renderRules(list) {
+    const rules = list.filter((i) => i.kind === "rule")
+      .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (b.createdAt || "").localeCompare(a.createdAt || ""));
+    if (!rules.length) return [emptyCard(loaded ? "还没有攻略" : "正在打开小本本…", loaded ? "点右下角 ＋，写下“遇到什么情况，就怎么做”。" : "")];
+    const urgent = rules.filter((r) => r.pinned), rest = rules.filter((r) => !r.pinned);
+    const card = (r) => h("button", { class: "card" + (r.pinned ? " urgent" : ""), onclick: () => openSheet(r) },
+      h("div", { class: "card-when" }, r.pinned ? h("span", { class: "tag" }, "紧急") : null, h("b", {}, r.when || "（未写情况）")),
+      r.do ? h("div", { class: "line do" }, h("span", { class: "dot" }, "✓"), h("p", {}, r.do)) : null,
+      r.dont ? h("div", { class: "line dont" }, h("span", { class: "dot" }, "✕"), h("p", {}, r.dont)) : null,
+      h("div", { class: "card-foot" }, who(r),
+        h("span", { class: "again" + ((r.repeat || 0) ? "" : " zero"), role: "button", tabindex: "0", "aria-label": "又犯了，加一次",
+          onclick: (e) => { e.stopPropagation(); bump(r); },
+          onkeydown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); bump(r); } } },
+          (r.repeat || 0) ? `又犯了 ${r.repeat} 次 ＋` : "又犯了？＋1")));
+    const out = [];
+    if (urgent.length) out.push(h("div", { class: "section-h" }, h("h2", {}, "先看这里"), h("span", {}, `${urgent.length} 条`)), h("div", { class: "cards" }, urgent.map(card)));
+    if (rest.length) out.push(h("div", { class: "section-h" }, h("h2", {}, urgent.length ? "其他" : "全部"), h("span", {}, `${rest.length} 条`)), h("div", { class: "cards" }, rest.map(card)));
+    return out;
+  }
+
+  function renderPrefs(list) {
+    const seg = h("div", { class: "seg", role: "group", "aria-label": "分类" },
+      Object.entries(PREF).map(([k, v]) => h("button", { "aria-pressed": String(k === prefKind), onclick: () => { prefKind = k; render(); } },
+        `${v.label} ${list.filter((i) => i.kind === k).length || ""}`.trim())));
+    const rows = list.filter((i) => i.kind === prefKind).sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+    const body = rows.length
+      ? h("div", { class: "list" }, rows.map((r) => h("button", { class: "row", onclick: () => openSheet(r) },
+          h("span", { class: "ico " + r.kind }, PREF[r.kind].mark),
+          h("span", { class: "row-main" }, h("b", {}, r.name || "（未命名）"), r.note ? h("small", {}, r.note) : null),
+          chev())))
+      : emptyCard(loaded ? `“${PREF[prefKind].label}”还是空的` : "正在打开小本本…", loaded ? PREF[prefKind].sub + "。点 ＋ 添加。" : "");
+    return [seg, h("p", { class: "sub", style: "margin:-10px 4px 0;font-size:13px" }, PREF[prefKind].sub), body];
+  }
+
+  function renderLogs(list) {
+    const rows = list.filter((i) => i.kind === "log").sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+    if (!rows.length) return [emptyCard(loaded ? "还没有记录" : "正在打开小本本…", loaded ? "吵架、误会、被惹生气的事，记下来，写好下次怎么做。" : "")];
+    return [h("div", { class: "list" }, rows.map((r) => {
+      const d = r.date ? new Date(r.date + "T12:00:00") : null;
+      return h("button", { class: "row", onclick: () => openSheet(r) },
+        h("span", { class: "ico log" }, d ? `${d.getMonth() + 1}月\n${d.getDate()}` : "—"),
+        h("span", { class: "row-main" }, h("b", {}, r.what || "（未写经过）"), r.next ? h("small", { class: "next" }, "下次：" + r.next) : null),
+        chev());
+    }))];
+  }
+
+  function chev() {
+    const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    s.setAttribute("class", "chev"); s.setAttribute("width", "9"); s.setAttribute("height", "15"); s.setAttribute("viewBox", "0 0 9 15");
+    s.innerHTML = '<path d="M1.5 1.5 7.5 7.5l-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+    return s;
+  }
+
+  let renderSeq = 0;
+  async function render() {
+    const seq = ++renderSeq;
+    const t = TABS[tab];
+    $("#title").textContent = t.title; $("#subtitle").textContent = t.sub;
+    document.querySelectorAll(".tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
+    if (user) {
+      const ids = [...new Set(items.map((i) => i.updatedBy || i.author).filter(Boolean))];
+      if (ids.some((id) => !profiles[id])) {
+        try { const ps = await user.profiles(ids); if (seq !== renderSeq) return; profiles = { ...profiles, ...ps }; } catch {}
+      }
+    }
+    const q = $("#q").value.trim().toLowerCase();
+    const list = items.filter((i) => matches(i, q));
+    const view = $("#view");
+    view.replaceChildren(h("div", { style: "display:flex;flex-direction:column;gap:22px" },
+      tab === "rules" ? renderRules(list) : tab === "prefs" ? renderPrefs(list) : renderLogs(list)));
+  }
+
+  function setTab(t) {
+    tab = t;
+    try { history.replaceState(null, "", "#" + t); } catch {}
+    render(); window.scrollTo({ top: 0 });
+  }
+
+  /* ---------- writes ---------- */
+  function blockedWrite() {
+    if (readOnly || !col) { toast(db ? "你现在只能查看，请让对方把你设为“编辑者”" : "没连上存储，暂时不能保存"); return true; }
+    return false;
+  }
+  async function write(fn) {
+    try { await fn(); return true; }
+    catch (e) {
+      if (e && e.code === "invalid_argument") { readOnly = true; toast("没有编辑权限，请让对方把你设为“编辑者”"); }
+      else if (e && e.code === "quota_exceeded") toast("小本本满了，先删掉一些旧内容");
+      else toast("保存失败，请稍后再试");
+      return false;
+    }
+  }
+  async function bump(r) {
+    if (blockedWrite()) return;
+    const n = (r.repeat || 0) + 1;
+    if (await write(() => col.doc(r.id).update({ repeat: n, lastRepeat: new Date().toISOString() }))) toast(`记下了：第 ${n} 次`);
+  }
+
+  /* ---------- sheet ---------- */
+  let editing = null, sheetKind = "rule", repeat = 0, delArmed = false;
+  const sheet = $("#sheet"), scrim = $("#scrim");
+
+  function setPrefSeg(k) { document.querySelectorAll("#f-kind button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.k === k))); }
+  function openSheet(it) {
+    editing = it || null;
+    sheetKind = it ? (it.kind === "rule" || it.kind === "log" ? it.kind : "pref") : (tab === "rules" ? "rule" : tab === "logs" ? "log" : "pref");
+    document.querySelectorAll("[data-for]").forEach((el) => { el.hidden = el.dataset.for !== sheetKind; });
+    const v = (id, val) => { $(id).value = val || ""; };
+    v("#f-when", it?.when); v("#f-do", it?.do); v("#f-dont", it?.dont);
+    $("#f-pin").checked = !!it?.pinned;
+    repeat = it?.repeat || 0; $("#f-repeat").textContent = repeat;
+    setPrefSeg(it && PREF[it.kind] ? it.kind : prefKind);
+    v("#f-name", it?.name); v("#f-note", it?.note);
+    v("#f-date", it?.date || today()); v("#f-what", it?.what); v("#f-next", it?.next);
+    const label = sheetKind === "rule" ? "攻略" : sheetKind === "log" ? "记录" : "喜好";
+    $("#sheet-title").textContent = (it ? "编辑" : "新增") + label;
+    const del = $("#del"); del.hidden = !it; delArmed = false; del.classList.remove("confirm"); del.textContent = "删除";
+    sheet.hidden = false; scrim.hidden = false;
+    requestAnimationFrame(() => requestAnimationFrame(() => { sheet.classList.add("on"); scrim.classList.add("on"); }));
+    $("#form").scrollTop = 0;
+  }
+  function closeSheet() {
+    sheet.classList.remove("on"); scrim.classList.remove("on");
+    setTimeout(() => { if (!sheet.classList.contains("on")) { sheet.hidden = true; scrim.hidden = true; } }, 340);
+    editing = null;
+  }
+  function collect() {
+    if (sheetKind === "rule") {
+      const d = { kind: "rule", when: $("#f-when").value.trim(), do: $("#f-do").value.trim(), dont: $("#f-dont").value.trim(), pinned: $("#f-pin").checked, repeat };
+      return d.when || d.do ? d : null;
+    }
+    if (sheetKind === "log") {
+      const d = { kind: "log", date: $("#f-date").value || today(), what: $("#f-what").value.trim(), next: $("#f-next").value.trim() };
+      return d.what ? d : null;
+    }
+    const k = document.querySelector('#f-kind button[aria-pressed="true"]')?.dataset.k || "like";
+    const d = { kind: k, name: $("#f-name").value.trim(), note: $("#f-note").value.trim() };
+    return d.name ? d : null;
+  }
+  async function save() {
+    const d = collect();
+    if (!d) { toast(sheetKind === "rule" ? "至少写一下“遇到这种情况”" : sheetKind === "log" ? "写一下发生了什么" : "写一下名字"); return; }
+    if (blockedWrite()) return;
+    const now = new Date().toISOString();
+    $("#save").disabled = true;
+    const target = editing;
+    const ok = await write(() => target
+      ? col.doc(target.id).update({ ...d, updatedAt: now, updatedBy: me })
+      : col.add({ ...d, author: me, createdAt: now }));
+    $("#save").disabled = false;
+    if (ok) {
+      if (PREF[d.kind]) prefKind = d.kind;
+      closeSheet(); toast(target ? "已更新" : "已添加");
+    }
+  }
+  async function remove() {
+    if (!editing) return;
+    const del = $("#del");
+    if (!delArmed) { delArmed = true; del.classList.add("confirm"); del.textContent = "确认删除？再点一次"; return; }
+    if (blockedWrite()) return;
+    const target = editing;
+    if (await write(() => col.doc(target.id).delete())) { closeSheet(); toast("已删除"); }
+  }
+
+  $("#cancel").addEventListener("click", closeSheet);
+  scrim.addEventListener("click", closeSheet);
+  $("#save").addEventListener("click", save);
+  $("#form").addEventListener("submit", (e) => { e.preventDefault(); save(); });
+  $("#del").addEventListener("click", remove);
+  $("#rep-minus").addEventListener("click", () => { repeat = Math.max(0, repeat - 1); $("#f-repeat").textContent = repeat; });
+  $("#rep-plus").addEventListener("click", () => { repeat += 1; $("#f-repeat").textContent = repeat; });
+  document.querySelectorAll("#f-kind button").forEach((b) => b.addEventListener("click", () => setPrefSeg(b.dataset.k)));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !sheet.hidden) closeSheet(); });
+  document.querySelectorAll(".tabs button").forEach((b) => b.addEventListener("click", () => setTab(b.dataset.tab)));
+  $("#add").addEventListener("click", () => openSheet(null));
+  $("#q").addEventListener("input", render);
+
+  render();
+
+  /* ---------- data ---------- */
+  (async () => {
+    const c = window.claude;
+    if (!c?.use) { loaded = true; showNotice("在 Claude 里打开这个页面，才能保存和同步。"); render(); return; }
+    [db, user] = await Promise.all([c.use("db"), c.use("user")]);
+    if (user) {
+      me = await user.id();
+      const can = await user.can("data.write");
+      if (can === false) { readOnly = true; showNotice("你现在只能查看。想一起编辑，请让对方在分享里把你设为“编辑者”。"); }
+    }
+    if (!db) { loaded = true; showNotice("没连上存储：请先登录 Claude 再打开。"); render(); return; }
+    col = db.collection("items");
+    col.onSnapshot((snap) => {
+      items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      loaded = true; render();
+    }, () => { loaded = true; showNotice("同步中断了，刷新一下页面。"); render(); });
+  })();
+
+  function showNotice(msg) { const n = $("#notice"); n.className = "banner"; n.textContent = msg; n.hidden = false; }
+})();
+</script>
