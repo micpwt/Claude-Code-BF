@@ -1,0 +1,812 @@
+<title>今天吃什么</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: iOS-style single column — large title, inset cards, floating glass tab bar + add button, bottom sheets, full-screen unlock moment */
+:root {
+  --bg: #F2F2F7;
+  --card: #FFFFFF;
+  --fill: rgba(118,118,128,.12);
+  --label: #000000;
+  --label2: rgba(60,60,67,.62);
+  --label3: rgba(60,60,67,.3);
+  --sep: rgba(60,60,67,.18);
+  --accent: #F2355B;
+  --accent-soft: rgba(242,53,91,.12);
+  --gold: #E8A10C;
+  --red: #E5352B;
+  --green: #24A148;
+  --glass: rgba(255,255,255,.72);
+  --glass-edge: rgba(255,255,255,.9);
+  --shadow: 0 8px 30px rgba(0,0,0,.10), 0 1px 3px rgba(0,0,0,.06);
+  --scrim: rgba(0,0,0,.3);
+  --c-zh: #E5484D; --c-cha: #C27A2C; --c-xi: #3E7BFA; --c-th: #2FA35B;
+  --c-jp: #E2557F; --c-kr: #8E5BE0; --c-fast: #F08C1A; --c-other: #6E7380;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", system-ui, sans-serif;
+  --r-card: 22px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #000000; --card: #1C1C1E; --fill: rgba(118,118,128,.24);
+  --label: #FFFFFF; --label2: rgba(235,235,245,.62); --label3: rgba(235,235,245,.3); --sep: rgba(84,84,88,.55);
+  --accent: #FF4F72; --accent-soft: rgba(255,79,114,.18); --gold: #FFC23D; --red: #FF5A50; --green: #3DD26A;
+  --glass: rgba(44,44,48,.66); --glass-edge: rgba(255,255,255,.14);
+  --shadow: 0 8px 30px rgba(0,0,0,.5), 0 1px 3px rgba(0,0,0,.4); --scrim: rgba(0,0,0,.6);
+  --c-zh: #FF6369; --c-cha: #E09A4E; --c-xi: #6B9BFF; --c-th: #4CC277;
+  --c-jp: #FF7BA1; --c-kr: #AD83FF; --c-fast: #FFA640; --c-other: #9AA0AD;
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #000000; --card: #1C1C1E; --fill: rgba(118,118,128,.24);
+  --label: #FFFFFF; --label2: rgba(235,235,245,.62); --label3: rgba(235,235,245,.3); --sep: rgba(84,84,88,.55);
+  --accent: #FF4F72; --accent-soft: rgba(255,79,114,.18); --gold: #FFC23D; --red: #FF5A50; --green: #3DD26A;
+  --glass: rgba(44,44,48,.66); --glass-edge: rgba(255,255,255,.14);
+  --shadow: 0 8px 30px rgba(0,0,0,.5), 0 1px 3px rgba(0,0,0,.4); --scrim: rgba(0,0,0,.6);
+  --c-zh: #FF6369; --c-cha: #E09A4E; --c-xi: #6B9BFF; --c-th: #4CC277;
+  --c-jp: #FF7BA1; --c-kr: #AD83FF; --c-fast: #FFA640; --c-other: #9AA0AD;
+  color-scheme: dark;
+}
+[hidden] { display: none !important; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { background: var(--bg); color: var(--label); }
+body { font-family: var(--font); font-size: 16px; line-height: 1.4; -webkit-font-smoothing: antialiased; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; padding: 0; }
+:focus-visible { outline: 2.5px solid var(--accent); outline-offset: 2px; border-radius: 10px; }
+
+.wrap {
+  max-width: 640px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 18px 140px;
+  display: flex; flex-direction: column; gap: 20px;
+}
+.top { display: flex; flex-direction: column; gap: 2px; padding-top: 18px; }
+.eyebrow { font-size: 13px; font-weight: 600; color: var(--accent); letter-spacing: .02em; }
+h1 { font-family: var(--font-display); font-size: 34px; line-height: 1.12; font-weight: 700; letter-spacing: -.02em; margin: 0; }
+h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
+.stack { display: flex; flex-direction: column; gap: 20px; }
+.sec-h { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 0 4px; margin-bottom: -10px; }
+.sec-h span { font-size: 13px; color: var(--label2); font-variant-numeric: tabular-nums; }
+.muted { color: var(--label2); font-size: 14px; }
+.card { background: var(--card); border-radius: var(--r-card); }
+.pad { padding: 16px; }
+.banner { background: var(--accent-soft); border-radius: 16px; padding: 12px 14px; font-size: 14px; }
+
+/* Segmented + chips */
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--fill); border-radius: 12px; padding: 3px; gap: 2px; }
+.seg button { height: 32px; border-radius: 9px; font-size: 14px; font-weight: 500; padding: 0 6px; white-space: nowrap; }
+.seg button[aria-pressed="true"] { background: var(--card); box-shadow: 0 2px 8px rgba(0,0,0,.12); font-weight: 600; }
+.chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 2px 16px; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: none; height: 34px; padding: 0 14px; border-radius: 99px; background: var(--card); font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+.chip[aria-pressed="true"] { background: var(--label); color: var(--bg); }
+.chip.wrap-ok { flex: 0 1 auto; }
+.chipgrid { display: flex; flex-wrap: wrap; gap: 8px; }
+.chipgrid .chip { background: var(--fill); }
+.chipgrid .chip[aria-pressed="true"] { background: var(--label); color: var(--bg); }
+
+/* Today */
+.today-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; width: 100%; text-align: left; position: relative; }
+.today-row + .today-row::before { content: ""; position: absolute; top: 0; left: 64px; right: 0; border-top: .5px solid var(--sep); }
+.ico { flex: none; width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; font-size: 19px; background: color-mix(in srgb, var(--cat, var(--c-other)) 16%, transparent); }
+.row-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.row-main b { font-weight: 600; font-size: 16px; overflow-wrap: anywhere; }
+.row-main small { color: var(--label2); font-size: 13px; }
+.slot { flex: none; font-size: 12px; font-weight: 600; color: var(--label2); background: var(--fill); padding: 3px 8px; border-radius: 99px; }
+.add-row { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: var(--accent); font-weight: 600; width: 100%; }
+
+/* Wheel */
+.wheel-card { padding: 16px; display: flex; flex-direction: column; gap: 14px; align-items: stretch; }
+.wheel-box { position: relative; width: 100%; max-width: 340px; aspect-ratio: 1; margin: 6px auto 0; }
+.wheel-box canvas { width: 100%; height: 100%; display: block; }
+.pointer { position: absolute; left: 50%; top: -6px; transform: translateX(-50%); width: 28px; height: 34px; filter: drop-shadow(0 2px 3px rgba(0,0,0,.25)); }
+.spin {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: 84px; height: 84px; border-radius: 50%; font-size: 17px; font-weight: 700; color: var(--accent);
+  display: grid; place-items: center; transition: transform .15s;
+}
+.spin:active { transform: translate(-50%, -50%) scale(.93); }
+.spin:disabled { color: var(--label3); }
+.result { display: flex; flex-direction: column; gap: 12px; align-items: center; text-align: center; padding: 4px 0 2px; }
+.result .r-name { font-size: 26px; font-weight: 700; letter-spacing: -.01em; }
+.result .r-meta { font-size: 14px; color: var(--label2); }
+.result .r-note { font-size: 12px; color: var(--label2); }
+.btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.btn { height: 44px; padding: 0 20px; border-radius: 99px; background: var(--fill); font-weight: 600; font-size: 16px; }
+.btn.primary { background: var(--accent); color: #fff; }
+.toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 15px; }
+.switch { position: relative; width: 51px; height: 31px; flex: none; }
+.switch input { opacity: 0; position: absolute; inset: 0; margin: 0; cursor: pointer; }
+.switch i { position: absolute; inset: 0; border-radius: 99px; background: var(--fill); transition: background .2s; pointer-events: none; }
+.switch i::after { content: ""; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.2); transition: transform .22s; }
+.switch input:checked + i { background: var(--green); }
+.switch input:checked + i::after { transform: translateX(20px); }
+
+/* Calendar */
+.cal { padding: 14px 10px 10px; }
+.cal-head { display: flex; align-items: center; justify-content: space-between; padding: 0 6px 10px; }
+.cal-head b { font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.nav { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--accent); font-size: 22px; }
+.nav:active { background: var(--fill); }
+.grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; }
+.dow { text-align: center; font-size: 11px; font-weight: 600; color: var(--label2); padding-bottom: 6px; }
+.day { aspect-ratio: .82; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 2px; padding-top: 5px; min-width: 0; }
+.day .n { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; font-size: 15px; font-variant-numeric: tabular-nums; }
+.day.today .n { color: var(--accent); font-weight: 700; }
+.day[aria-pressed="true"] .n { background: var(--accent); color: #fff; font-weight: 700; }
+.day .em { font-size: 13px; line-height: 1; letter-spacing: -2px; white-space: nowrap; overflow: hidden; max-width: 100%; }
+.day.out { visibility: hidden; }
+.day:active { background: var(--fill); }
+
+/* Places */
+.sum { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); }
+.sum div { padding: 14px 12px; display: flex; flex-direction: column; gap: 2px; text-align: center; }
+.sum div + div { border-left: .5px solid var(--sep); }
+.sum b { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sum small { font-size: 12px; color: var(--label2); }
+.list { overflow: hidden; }
+.prow { display: grid; grid-template-columns: 36px minmax(0,1fr) auto; gap: 4px 12px; padding: 12px 16px; width: 100%; text-align: left; position: relative; align-items: center; }
+.prow + .prow::before { content: ""; position: absolute; top: 0; left: 64px; right: 0; border-top: .5px solid var(--sep); }
+.prow:active { background: var(--fill); }
+.prow .num { text-align: right; font-variant-numeric: tabular-nums; display: flex; flex-direction: column; }
+.prow .num b { font-size: 16px; font-weight: 600; }
+.prow .num small { font-size: 12px; color: var(--label2); }
+.bar { grid-column: 2 / 4; height: 4px; border-radius: 2px; background: var(--fill); overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: 2px; background: var(--cat, var(--accent)); }
+.prefs { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+.pf { font-size: 11px; font-weight: 600; padding: 1px 6px; border-radius: 99px; background: var(--fill); color: var(--label2); }
+.pf.love { color: var(--accent); background: var(--accent-soft); }
+.pf.no { color: var(--red); }
+.locked .ico { filter: grayscale(1); opacity: .55; }
+.locked .row-main b { color: var(--label2); }
+.lock-tag { font-size: 12px; color: var(--gold); font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+
+.empty { padding: 26px 20px; text-align: center; color: var(--label2); font-size: 15px; display: flex; flex-direction: column; gap: 6px; align-items: center; }
+.empty strong { color: var(--label); font-size: 17px; font-weight: 600; }
+
+/* Floating chrome */
+.glass {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(24px) saturate(190%); backdrop-filter: blur(24px) saturate(190%);
+  box-shadow: var(--shadow), inset 0 0 0 .5px var(--glass-edge);
+}
+.dock {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; pointer-events: none;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+}
+.dock-in { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+.tabs { pointer-events: auto; display: flex; padding: 5px; border-radius: 99px; gap: 2px; }
+.tabs button { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 6px 16px 5px; border-radius: 99px; font-size: 11px; font-weight: 600; min-width: 66px; }
+.tabs button svg { width: 24px; height: 24px; }
+.tabs button[aria-selected="true"] { color: var(--accent); background: var(--fill); }
+.fab { pointer-events: auto; width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; color: var(--accent); flex: none; }
+.fab:active, .tabs button:active { transform: scale(.94); }
+
+/* Sheet */
+.scrim { position: fixed; inset: 0; background: var(--scrim); z-index: 30; opacity: 0; transition: opacity .25s; }
+.scrim.on { opacity: 1; }
+.sheet {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 31; max-height: 92%;
+  display: flex; flex-direction: column; background: var(--bg); border-radius: 26px 26px 0 0; box-shadow: var(--shadow);
+  transform: translateY(105%); transition: transform .34s cubic-bezier(.2,.9,.25,1); max-width: 680px; margin: 0 auto;
+}
+.sheet.on { transform: none; }
+.grab { width: 38px; height: 5px; border-radius: 3px; background: var(--label3); margin: 8px auto 0; flex: none; }
+.sheet-bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 8px 16px 6px; flex: none; }
+.sheet-bar h3 { margin: 0; font-size: 17px; font-weight: 600; }
+.sheet-bar .l { justify-self: start; } .sheet-bar .r { justify-self: end; }
+.pill { height: 36px; padding: 0 16px; border-radius: 99px; background: var(--fill); font-size: 16px; font-weight: 500; }
+.pill.primary { background: var(--accent); color: #fff; font-weight: 600; }
+.pill:disabled { opacity: .45; }
+.sheet-body {
+  overflow-y: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 10px calc(28px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 18px;
+}
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field > .lbl { font-size: 13px; color: var(--label2); padding: 0 14px; letter-spacing: .02em; }
+.field input[type="text"], .field input[type="date"], .field input[type="search"] {
+  width: 100%; border: 0; outline: none; background: var(--card); border-radius: 14px; padding: 13px 14px; font-size: 16px; min-height: 48px;
+}
+.field input:focus { box-shadow: inset 0 0 0 1.5px var(--accent); }
+.opt-list { max-height: 260px; overflow-y: auto; }
+.opt { display: flex; align-items: center; gap: 12px; padding: 10px 14px; width: 100%; text-align: left; position: relative; }
+.opt + .opt::before { content: ""; position: absolute; top: 0; left: 62px; right: 0; border-top: .5px solid var(--sep); }
+.opt[aria-pressed="true"] { background: var(--accent-soft); }
+.opt .check { margin-left: auto; color: var(--accent); font-weight: 700; visibility: hidden; }
+.opt[aria-pressed="true"] .check { visibility: visible; }
+.pref-row { display: grid; grid-template-columns: 40px 1fr; align-items: center; gap: 10px; }
+.pref-row > span { font-size: 15px; font-weight: 600; padding-left: 4px; }
+.danger { background: var(--card); color: var(--red); border-radius: 14px; height: 50px; font-size: 16px; font-weight: 500; width: 100%; }
+.danger.confirm { background: var(--red); color: #fff; font-weight: 600; }
+.toggle-card { background: var(--card); border-radius: 14px; padding: 10px 14px; min-height: 52px; }
+.toggle-card small { display: block; font-size: 13px; color: var(--label2); }
+
+/* Unlock moment */
+.unlock { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: color-mix(in srgb, var(--bg) 55%, transparent); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); opacity: 0; transition: opacity .3s; padding: 24px; }
+.unlock.on { opacity: 1; }
+.unlock canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.u-card { position: relative; background: var(--card); border-radius: 30px; padding: 30px 26px 24px; width: min(320px, 100%); text-align: center; display: flex; flex-direction: column; gap: 8px; align-items: center; box-shadow: var(--shadow); transform: scale(.6); opacity: 0; }
+.unlock.on .u-card { animation: pop .6s cubic-bezier(.2,1.5,.4,1) .55s forwards; }
+.u-lock { width: 92px; height: 92px; position: relative; margin-bottom: 4px; }
+.u-lock svg { width: 100%; height: 100%; overflow: visible; }
+.u-lock .shackle { transform-origin: 70px 40px; }
+.unlock.on .u-lock { animation: shake .45s ease-in-out .1s 1; }
+.unlock.on .u-lock .shackle { animation: open .4s cubic-bezier(.3,1.6,.5,1) .5s forwards; }
+.u-glow { position: absolute; inset: -30px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--gold) 45%, transparent), transparent 65%); opacity: 0; }
+.unlock.on .u-glow { animation: glow 1.4s ease-out .55s forwards; }
+.u-eyebrow { font-size: 13px; font-weight: 700; color: var(--gold); letter-spacing: .12em; }
+.u-name { font-size: 28px; font-weight: 800; letter-spacing: -.01em; overflow-wrap: anywhere; }
+.u-meta { font-size: 14px; color: var(--label2); }
+@keyframes shake { 0%,100% { transform: rotate(0) } 20% { transform: rotate(-12deg) } 40% { transform: rotate(10deg) } 60% { transform: rotate(-7deg) } 80% { transform: rotate(4deg) } }
+@keyframes open { to { transform: translateY(-14px) rotate(28deg); } }
+@keyframes pop { to { transform: scale(1); opacity: 1; } }
+@keyframes glow { 0% { opacity: 0; transform: scale(.5) } 40% { opacity: 1 } 100% { opacity: .6; transform: scale(1.2) } }
+
+.toast { position: fixed; left: 50%; top: calc(14px + env(safe-area-inset-top, 0px)); z-index: 60; transform: translate(-50%, -160%); transition: transform .3s cubic-bezier(.2,.9,.25,1); padding: 10px 18px; border-radius: 99px; font-size: 14px; font-weight: 600; max-width: calc(100% - 32px); text-align: center; }
+.toast.on { transform: translate(-50%, 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation-duration: .01ms !important; animation-delay: 0s !important; }
+}
+</style>
+
+<main class="wrap">
+  <header class="top">
+    <div class="eyebrow" id="eyebrow"></div>
+    <h1 id="title">今天吃什么</h1>
+  </header>
+  <div id="notice" class="banner" hidden></div>
+  <div id="view" class="stack"></div>
+</main>
+
+<nav class="dock" aria-label="主导航">
+  <div class="dock-in">
+    <div class="tabs glass" role="tablist">
+      <button role="tab" data-tab="today" aria-selected="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5V12l6 6M12 12 5.5 17.5" stroke-linecap="round"/></svg>转盘</button>
+      <button role="tab" data-tab="cal" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>日历</button>
+      <button role="tab" data-tab="places" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 20V4M18 20v-6M12 20V9"/></svg>餐厅</button>
+    </div>
+    <button class="fab glass" id="add" aria-label="新增">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+  </div>
+</nav>
+
+<div class="scrim" id="scrim" hidden></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" hidden>
+  <div class="grab"></div>
+  <div class="sheet-bar">
+    <button class="pill l" id="cancel">取消</button>
+    <h3 id="sheet-title"></h3>
+    <button class="pill primary r" id="save">完成</button>
+  </div>
+  <div class="sheet-body" id="sheet-body"></div>
+</section>
+
+<div class="unlock" id="unlock" hidden>
+  <canvas id="confetti"></canvas>
+  <div class="u-card" role="alertdialog" aria-labelledby="u-name">
+    <div class="u-lock">
+      <div class="u-glow"></div>
+      <svg viewBox="0 0 100 100">
+        <path class="shackle" d="M30 46V32a20 20 0 0 1 40 0v14" fill="none" stroke="var(--gold)" stroke-width="10" stroke-linecap="round"/>
+        <rect x="18" y="44" width="64" height="48" rx="14" fill="var(--gold)"/>
+        <circle cx="50" cy="64" r="7" fill="var(--card)"/><rect x="47" y="66" width="6" height="12" rx="3" fill="var(--card)"/>
+      </svg>
+    </div>
+    <div class="u-eyebrow">解锁新地方</div>
+    <div class="u-name" id="u-name"></div>
+    <div class="u-meta" id="u-meta"></div>
+    <button class="btn primary" id="u-ok" style="margin-top:10px">太好了</button>
+  </div>
+</div>
+
+<div class="toast glass" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const h = (tag, props = {}, ...kids) => {
+    const el = document.createElement(tag);
+    for (const [k, v] of Object.entries(props)) {
+      if (v == null || v === false) continue;
+      if (k === "class") el.className = v;
+      else if (k === "style") el.style.cssText = v;
+      else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+      else el.setAttribute(k, v === true ? "" : v);
+    }
+    for (const c of kids.flat()) if (c != null && c !== false) el.append(c.nodeType ? c : document.createTextNode(String(c)));
+    return el;
+  };
+
+  const CATS = [
+    { k: "zh", name: "中餐", em: "🥢" }, { k: "cha", name: "茶餐厅", em: "🫖" },
+    { k: "xi", name: "西餐", em: "🍝" }, { k: "th", name: "泰国餐", em: "🍛" },
+    { k: "jp", name: "日料", em: "🍣" }, { k: "kr", name: "韩餐", em: "🥘" },
+    { k: "fast", name: "快餐", em: "🍔" }, { k: "other", name: "其他", em: "🍽️" },
+  ];
+  const CAT = Object.fromEntries(CATS.map((c) => [c.k, c]));
+  const cat = (k) => CAT[k] || CAT.other;
+  const catVar = (k) => `var(--c-${cat(k).k})`;
+  const SLOTS = [{ k: "lunch", name: "午餐" }, { k: "dinner", name: "晚餐" }, { k: "late", name: "宵夜" }];
+  const SLOT = Object.fromEntries(SLOTS.map((s) => [s.k, s.name]));
+  const WHO = { her: "她", him: "他" };
+  const PREF = { love: "爱吃", ok: "还行", no: "不想吃" };
+
+  const ymd = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const todayStr = () => ymd(new Date());
+  const md = (s) => { const [, m, d] = s.split("-"); return `${+m}月${+d}日`; };
+  const pct = (n, t) => t ? (n / t * 100 < 10 && n ? (n / t * 100).toFixed(1) : Math.round(n / t * 100)) + "%" : "0%";
+
+  /* ---------- state ---------- */
+  let tab = ["today", "cal", "places"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "today";
+  let places = {}, meals = [];
+  let loaded = { places: false, meals: false };
+  let db = null, me = null, myRole = "her", readOnly = false;
+  let wheelCat = "all", wheelMode = "both", explore = true, spinning = false, lastPick = null, wheelAngle = 0;
+  const now = new Date();
+  let calY = now.getFullYear(), calM = now.getMonth(), selDay = todayStr();
+  let placeFilter = "all";
+
+  const placeList = () => Object.values(places);
+  const countsByPlace = () => { const c = {}; for (const m of meals) c[m.placeId] = (c[m.placeId] || 0) + 1; return c; };
+  const isUnlocked = (p) => !!p.unlockedAt || p.isDefault;
+
+  let toastT;
+  function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), 2200); }
+
+  /* ---------- writes ---------- */
+  async function write(fn) {
+    if (!db) { toast("没连上存储，暂时不能保存"); return false; }
+    if (readOnly) { toast("你现在只能查看，请让她把你设为“编辑者”"); return false; }
+    try { await fn(); return true; }
+    catch (e) {
+      if (e && e.code === "invalid_argument") { readOnly = true; toast("没有编辑权限，请让她把你设为“编辑者”"); }
+      else if (e && e.code === "quota_exceeded") toast("存储满了，删掉一些旧记录再试");
+      else toast("保存失败，请稍后再试");
+      return false;
+    }
+  }
+
+  /* ---------- views ---------- */
+  function render() {
+    const titles = { today: "今天吃什么", cal: "吃过什么", places: "我们的餐厅" };
+    $("#title").textContent = titles[tab];
+    const d = new Date();
+    $("#eyebrow").textContent = `${d.getMonth() + 1}月${d.getDate()}日 · 星期${"日一二三四五六"[d.getDay()]}`;
+    document.querySelectorAll(".tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
+    const v = $("#view");
+    v.replaceChildren(...(tab === "today" ? viewToday() : tab === "cal" ? viewCal() : viewPlaces()));
+    if (tab === "today") drawWheel();
+  }
+
+  function mealRow(m) {
+    const p = places[m.placeId];
+    const c = cat(p?.cat);
+    return h("button", { class: "today-row", onclick: () => openMeal(m) },
+      h("span", { class: "ico", style: `--cat:${catVar(p?.cat)}` }, c.em),
+      h("span", { class: "row-main" }, h("b", {}, p ? p.name : "（已删除的餐厅）"),
+        h("small", {}, `${c.name} · ${WHO[m.decidedBy] || "?"}决定的`)),
+      h("span", { class: "slot" }, SLOT[m.slot] || ""));
+  }
+
+  function viewToday() {
+    const t = todayStr();
+    const todays = meals.filter((m) => m.date === t).sort((a, b) => SLOTS.findIndex((s) => s.k === a.slot) - SLOTS.findIndex((s) => s.k === b.slot));
+    const todayCard = h("div", { class: "card list" },
+      todays.length ? todays.map(mealRow) : (loaded.meals ? h("div", { class: "empty", style: "padding:18px" }, h("span", {}, "今天还没记吃了什么")) : h("div", { class: "empty", style: "padding:18px" }, "正在加载…")),
+      h("button", { class: "add-row", onclick: () => openMeal({ date: t }) }, "＋ 记下今天吃了什么"));
+
+    const cands = candidates();
+    const chips = h("div", { class: "chips", role: "group", "aria-label": "分类" },
+      [{ k: "all", name: "全部", em: "" }, ...CATS].filter((c) => c.k === "all" || placeList().some((p) => (p.cat || "other") === c.k))
+        .map((c) => h("button", { class: "chip", "aria-pressed": String(wheelCat === c.k), onclick: () => { wheelCat = c.k; lastPick = null; render(); } }, c.em ? c.em + " " + c.name : c.name)));
+    const mode = h("div", { class: "seg", role: "group", "aria-label": "听谁的喜好" },
+      [["both", "两个人都行"], ["her", "听她的"], ["him", "听他的"]].map(([k, n]) =>
+        h("button", { "aria-pressed": String(wheelMode === k), onclick: () => { wheelMode = k; lastPick = null; render(); } }, n)));
+    const exp = h("label", { class: "toggle-row" }, h("span", {}, "包括还没解锁的地方"),
+      h("span", { class: "switch" }, h("input", { type: "checkbox", id: "explore", checked: explore, onchange: (e) => { explore = e.target.checked; lastPick = null; render(); } }), h("i")));
+
+    const box = h("div", { class: "wheel-box" },
+      h("canvas", { id: "wheel", width: "680", height: "680", "aria-label": `转盘，共 ${cands.length} 个选项` }),
+      pointerSvg(),
+      h("button", { class: "spin glass", id: "spin", disabled: cands.length < 1 || spinning, onclick: spin }, spinning ? "…" : "转！"));
+
+    let result = null;
+    if (!cands.length) {
+      result = h("div", { class: "result" }, h("div", { class: "muted" }, loaded.places ? "这个条件下没有可选的餐厅。换个分类，或者到“餐厅”里加几家。" : "正在加载…"));
+    } else if (lastPick && places[lastPick]) {
+      const p = places[lastPick], c = cat(p.cat);
+      result = h("div", { class: "result", id: "result" },
+        h("div", { class: "r-meta" }, "转盘建议"),
+        h("div", { class: "r-name" }, `${c.em} ${p.name}`),
+        h("div", { class: "r-meta" }, `${c.name}${isUnlocked(p) ? "" : " · 🔒 还没解锁"}`),
+        h("div", { class: "btns" },
+          h("button", { class: "btn", onclick: spin }, "再转一次"),
+          h("button", { class: "btn primary", onclick: () => openMeal({ date: todayStr(), placeId: p.id }) }, "就吃这个")),
+        h("div", { class: "r-note" }, "只是建议，点“就吃这个”才会记下来"));
+    } else {
+      result = h("div", { class: "result" }, h("div", { class: "muted" }, `${cands.length} 个选项 · 喜欢的格子更大，更容易转到`));
+    }
+
+    return [
+      h("div", { class: "sec-h" }, h("h2", {}, "今天"), h("span", {}, todays.length ? `${todays.length} 顿` : "")),
+      todayCard,
+      h("div", { class: "sec-h" }, h("h2", {}, "转盘"), h("span", {}, "不知道吃什么就转一下")),
+      chips,
+      h("div", { class: "card wheel-card" }, mode, exp, box, result),
+    ];
+  }
+
+  function pointerSvg() {
+    const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    s.setAttribute("class", "pointer"); s.setAttribute("viewBox", "0 0 28 34");
+    s.innerHTML = '<path d="M14 33 2 9a12 12 0 1 1 24 0z" fill="var(--accent)"/><circle cx="14" cy="11" r="4.5" fill="var(--card)"/>';
+    return s;
+  }
+
+  /* ---------- wheel ---------- */
+  function weightFor(p) {
+    const prefs = wheelMode === "both" ? [p.prefHer, p.prefHim] : [wheelMode === "her" ? p.prefHer : p.prefHim];
+    if (prefs.includes("no")) return 0;
+    return 1 + prefs.filter((x) => x === "love").length;
+  }
+  function candidates() {
+    return placeList()
+      .filter((p) => wheelCat === "all" || (p.cat || "other") === wheelCat)
+      .filter((p) => explore || isUnlocked(p))
+      .map((p) => ({ p, w: weightFor(p) }))
+      .filter((x) => x.w > 0)
+      .sort((a, b) => (a.p.cat || "").localeCompare(b.p.cat || "") || (a.p.createdAt || "").localeCompare(b.p.createdAt || ""));
+  }
+  function drawWheel() {
+    const cv = $("#wheel"); if (!cv) return;
+    const ctx = cv.getContext("2d"), S = cv.width, R = S / 2 - 8;
+    const cs = getComputedStyle(document.documentElement);
+    const cands = candidates();
+    ctx.clearRect(0, 0, S, S);
+    ctx.save(); ctx.translate(S / 2, S / 2);
+    if (!cands.length) {
+      ctx.fillStyle = cs.getPropertyValue("--fill"); ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill(); ctx.restore(); return;
+    }
+    const total = cands.reduce((s, x) => s + x.w, 0);
+    let a = wheelAngle - Math.PI / 2;
+    const card = cs.getPropertyValue("--card").trim();
+    cands.forEach((x, i) => {
+      const span = x.w / total * Math.PI * 2;
+      const col = cs.getPropertyValue(`--c-${cat(x.p.cat).k}`).trim();
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, R, a, a + span); ctx.closePath();
+      ctx.fillStyle = col; ctx.globalAlpha = i % 2 ? .78 : 1; ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = card; ctx.lineWidth = 4; ctx.stroke();
+      const mid = a + span / 2, cosm = Math.cos(mid);
+      ctx.save(); ctx.rotate(cosm < 0 ? mid + Math.PI : mid);
+      ctx.fillStyle = "#fff"; ctx.textAlign = cosm < 0 ? "left" : "right"; ctx.textBaseline = "middle";
+      const fs = Math.max(18, Math.min(30, span * R * .42));
+      ctx.font = `600 ${fs}px ${cs.getPropertyValue("--font")}`;
+      let label = x.p.name; if (label.length > 7) label = label.slice(0, 6) + "…";
+      if (!isUnlocked(x.p)) label = "🔒" + label;
+      if (span * R > 22) ctx.fillText(label, cosm < 0 ? -(R - 22) : R - 22, 0);
+      ctx.restore();
+      a += span;
+    });
+    ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.strokeStyle = card; ctx.lineWidth = 8; ctx.stroke();
+    ctx.restore();
+  }
+  function spin() {
+    const cands = candidates(); if (!cands.length || spinning) return;
+    const total = cands.reduce((s, x) => s + x.w, 0);
+    let r = Math.random() * total, idx = 0;
+    for (; idx < cands.length; idx++) { r -= cands[idx].w; if (r <= 0) break; }
+    idx = Math.min(idx, cands.length - 1);
+    let start = 0; for (let i = 0; i < idx; i++) start += cands[i].w;
+    const span = cands[idx].w;
+    const mid = (start + span * (.2 + Math.random() * .6)) / total * Math.PI * 2;
+    // pointer at top: wheel angle such that segment mid sits at -90deg
+    const target = -mid;
+    const from = wheelAngle;
+    const base = from - (from % (Math.PI * 2));
+    const to = base + Math.PI * 2 * 6 + ((target % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const dur = reduce ? 1 : 3800, t0 = performance.now();
+    spinning = true; lastPick = null;
+    const btn = $("#spin"); if (btn) { btn.disabled = true; btn.textContent = "…"; }
+    const step = (t) => {
+      const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 4);
+      wheelAngle = from + (to - from) * e; drawWheel();
+      if (k < 1) requestAnimationFrame(step);
+      else { spinning = false; wheelAngle = to % (Math.PI * 2); lastPick = cands[idx].p.id; render(); $("#result")?.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" }); }
+    };
+    requestAnimationFrame(step);
+  }
+
+  /* ---------- calendar ---------- */
+  function viewCal() {
+    const first = new Date(calY, calM, 1);
+    const lead = (first.getDay() + 6) % 7;
+    const days = new Date(calY, calM + 1, 0).getDate();
+    const byDay = {}; for (const m of meals) (byDay[m.date] ||= []).push(m);
+    const t = todayStr();
+    const cells = [];
+    for (let i = 0; i < lead; i++) cells.push(h("div", { class: "day out", "aria-hidden": "true" }));
+    for (let d = 1; d <= days; d++) {
+      const ds = ymd(new Date(calY, calM, d));
+      const ms = (byDay[ds] || []).sort((a, b) => SLOTS.findIndex((s) => s.k === a.slot) - SLOTS.findIndex((s) => s.k === b.slot));
+      cells.push(h("button", { class: "day" + (ds === t ? " today" : ""), "aria-pressed": String(ds === selDay), "aria-label": `${md(ds)}，${ms.length} 顿`, onclick: () => { selDay = ds; render(); } },
+        h("span", { class: "n" }, d), h("span", { class: "em" }, ms.slice(0, 3).map((m) => cat(places[m.placeId]?.cat).em).join(""))));
+    }
+    const monthKey = `${calY}-${String(calM + 1).padStart(2, "0")}`;
+    const monthMeals = meals.filter((m) => m.date.startsWith(monthKey));
+    const mc = {}; for (const m of monthMeals) mc[m.placeId] = (mc[m.placeId] || 0) + 1;
+    const top = Object.entries(mc).sort((a, b) => b[1] - a[1])[0];
+    const dayMeals = (byDay[selDay] || []).sort((a, b) => SLOTS.findIndex((s) => s.k === a.slot) - SLOTS.findIndex((s) => s.k === b.slot));
+
+    return [
+      h("div", { class: "card cal" },
+        h("div", { class: "cal-head" },
+          h("button", { class: "nav", "aria-label": "上个月", onclick: () => { calM--; if (calM < 0) { calM = 11; calY--; } render(); } }, "‹"),
+          h("b", {}, `${calY}年${calM + 1}月`),
+          h("button", { class: "nav", "aria-label": "下个月", onclick: () => { calM++; if (calM > 11) { calM = 0; calY++; } render(); } }, "›")),
+        h("div", { class: "grid" }, "一二三四五六日".split("").map((x) => h("div", { class: "dow" }, x)), cells)),
+      h("p", { class: "muted", style: "margin:-8px 4px 0" }, monthMeals.length
+        ? `这个月吃了 ${monthMeals.length} 顿，最常去的是「${places[top[0]]?.name || "已删除"}」${top[1]} 次（${pct(top[1], monthMeals.length)}）`
+        : (loaded.meals ? "这个月还没有记录" : "正在加载…")),
+      h("div", { class: "sec-h" }, h("h2", {}, md(selDay)), h("span", {}, dayMeals.length ? `${dayMeals.length} 顿` : "")),
+      h("div", { class: "card list" }, dayMeals.map(mealRow),
+        h("button", { class: "add-row", onclick: () => openMeal({ date: selDay }) }, `＋ 记下${selDay === t ? "今天" : "这天"}吃了什么`)),
+    ];
+  }
+
+  /* ---------- places ---------- */
+  function viewPlaces() {
+    const cnt = countsByPlace(), total = meals.length;
+    const all = placeList();
+    const unlocked = all.filter(isUnlocked);
+    const herN = meals.filter((m) => m.decidedBy === "her").length, himN = meals.filter((m) => m.decidedBy === "him").length;
+    const filt = (p) => placeFilter === "all" || (p.cat || "other") === placeFilter;
+    const open = unlocked.filter(filt).sort((a, b) => (cnt[b.id] || 0) - (cnt[a.id] || 0) || (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
+    const locked = all.filter((p) => !isUnlocked(p) && filt(p)).sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+    const maxC = Math.max(1, ...open.map((p) => cnt[p.id] || 0));
+
+    const prefChips = (p) => h("span", { class: "prefs" },
+      p.prefHer ? h("span", { class: "pf " + p.prefHer }, `她${PREF[p.prefHer]}`) : null,
+      p.prefHim ? h("span", { class: "pf " + p.prefHim }, `他${PREF[p.prefHim]}`) : null);
+    const row = (p) => {
+      const c = cat(p.cat), n = cnt[p.id] || 0;
+      return h("button", { class: "prow", style: `--cat:${catVar(p.cat)}`, onclick: () => openPlace(p) },
+        h("span", { class: "ico" }, c.em),
+        h("span", { class: "row-main" }, h("b", {}, p.name), h("small", {}, `${c.name}${p.isDefault ? " · 常吃" : ""} `, prefChips(p))),
+        h("span", { class: "num" }, h("b", {}, `${n} 次`), h("small", {}, pct(n, total))),
+        h("span", { class: "bar", "aria-hidden": "true" }, h("i", { style: `width:${n / maxC * 100}%` })));
+    };
+    const lrow = (p) => {
+      const c = cat(p.cat);
+      return h("button", { class: "prow locked", onclick: () => openPlace(p) },
+        h("span", { class: "ico" }, c.em),
+        h("span", { class: "row-main" }, h("b", {}, p.name), h("small", {}, c.name + " ", prefChips(p))),
+        h("span", { class: "lock-tag" }, "🔒 吃一次解锁"));
+    };
+    const chips = h("div", { class: "chips" },
+      [{ k: "all", name: "全部" }, ...CATS].filter((c) => c.k === "all" || all.some((p) => (p.cat || "other") === c.k))
+        .map((c) => h("button", { class: "chip", "aria-pressed": String(placeFilter === c.k), onclick: () => { placeFilter = c.k; render(); } }, (c.em ? c.em + " " : "") + c.name)));
+
+    return [
+      h("div", { class: "card sum" },
+        h("div", {}, h("b", {}, total), h("small", {}, "一共吃了几顿")),
+        h("div", {}, h("b", {}, `${unlocked.length}/${all.length}`), h("small", {}, "已解锁餐厅")),
+        h("div", {}, h("b", {}, `${herN}:${himN}`), h("small", {}, "她决定 : 他决定"))),
+      chips,
+      h("div", { class: "sec-h" }, h("h2", {}, "吃过的"), h("span", {}, "次数 · 每次吃到的概率")),
+      open.length ? h("div", { class: "card list" }, open.map(row))
+        : h("div", { class: "card empty" }, h("strong", {}, loaded.places ? "还没有餐厅" : "正在加载…"), loaded.places ? h("span", {}, "点右下角 ＋ 加上你们平时常吃的几家。") : null),
+      h("div", { class: "sec-h" }, h("h2", {}, "待解锁"), h("span", {}, locked.length ? `${locked.length} 家` : "")),
+      locked.length ? h("div", { class: "card list" }, locked.map(lrow))
+        : h("div", { class: "card empty" }, h("span", {}, "想去但还没去过的地方放这里，第一次去吃就会解锁。")),
+    ];
+  }
+
+  /* ---------- sheets ---------- */
+  const sheet = $("#sheet"), scrim = $("#scrim");
+  let onSave = null;
+  function showSheet(title, body, saveFn) {
+    $("#sheet-title").textContent = title;
+    $("#sheet-body").replaceChildren(...body);
+    onSave = saveFn;
+    sheet.hidden = false; scrim.hidden = false;
+    requestAnimationFrame(() => requestAnimationFrame(() => { sheet.classList.add("on"); scrim.classList.add("on"); }));
+    $("#sheet-body").scrollTop = 0;
+  }
+  function closeSheet() {
+    sheet.classList.remove("on"); scrim.classList.remove("on"); onSave = null;
+    setTimeout(() => { if (!sheet.classList.contains("on")) { sheet.hidden = true; scrim.hidden = true; } }, 340);
+  }
+  $("#cancel").addEventListener("click", closeSheet);
+  scrim.addEventListener("click", closeSheet);
+  $("#save").addEventListener("click", async () => { if (!onSave) return; $("#save").disabled = true; try { await onSave(); } finally { $("#save").disabled = false; } });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { if (!sheet.hidden) closeSheet(); else if (!$("#unlock").hidden) closeUnlock(); } });
+
+  const segCtl = (opts, cur, onPick) => {
+    const box = h("div", { class: "seg" });
+    const paint = (v) => box.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.v === v)));
+    opts.forEach(([v, n]) => box.append(h("button", { type: "button", "data-v": v, onclick: () => { onPick(v); paint(v); } }, n)));
+    paint(cur); return box;
+  };
+  const delBtn = (fn) => {
+    let armed = false;
+    const b = h("button", { class: "danger", type: "button", onclick: async () => {
+      if (!armed) { armed = true; b.classList.add("confirm"); b.textContent = "确认删除？再点一次"; return; }
+      await fn();
+    } }, "删除");
+    return b;
+  };
+
+  function openMeal(m) {
+    const editing = !!m.id;
+    const st = { date: m.date || todayStr(), slot: m.slot || defaultSlot(m.date), placeId: m.placeId || "", decidedBy: m.decidedBy || myRole };
+    const dateIn = h("input", { type: "date", id: "m-date", value: st.date, onchange: (e) => { st.date = e.target.value || st.date; } });
+    const listBox = h("div", { class: "card opt-list", role: "listbox", "aria-label": "选餐厅" });
+    const search = h("input", { type: "search", id: "m-q", placeholder: "搜索餐厅", autocomplete: "off", oninput: () => paintList() });
+    const cnt = countsByPlace();
+    function paintList() {
+      const q = search.value.trim().toLowerCase();
+      const ps = placeList().filter((p) => !q || p.name.toLowerCase().includes(q) || cat(p.cat).name.includes(q))
+        .sort((a, b) => (cnt[b.id] || 0) - (cnt[a.id] || 0) || a.name.localeCompare(b.name));
+      listBox.replaceChildren(...(ps.length ? ps.map((p) => h("button", { type: "button", class: "opt", "aria-pressed": String(p.id === st.placeId),
+          onclick: () => { st.placeId = p.id; paintList(); } },
+          h("span", { class: "ico", style: `--cat:${catVar(p.cat)}` }, cat(p.cat).em),
+          h("span", { class: "row-main" }, h("b", {}, p.name), h("small", {}, cat(p.cat).name + (isUnlocked(p) ? "" : " · 🔒 第一次吃"))),
+          h("span", { class: "check" }, "✓")))
+        : [h("div", { class: "empty", style: "padding:16px" }, "没有找到，先到“餐厅”里添加")]));
+    }
+    paintList();
+    const body = [
+      h("div", { class: "field" }, h("label", { class: "lbl", for: "m-date" }, "日期"), dateIn),
+      h("div", { class: "field" }, h("span", { class: "lbl" }, "哪一顿"), segCtl(SLOTS.map((s) => [s.k, s.name]), st.slot, (v) => { st.slot = v; })),
+      h("div", { class: "field" }, h("span", { class: "lbl" }, "吃了哪家"), search, listBox),
+      h("div", { class: "field" }, h("span", { class: "lbl" }, "最后谁决定的"), segCtl([["her", "她决定"], ["him", "他决定"]], st.decidedBy, (v) => { st.decidedBy = v; })),
+    ];
+    if (editing) body.push(delBtn(async () => { if (await write(() => db.collection("meals").doc(m.id).delete())) { closeSheet(); toast("已删除"); } }));
+    showSheet(editing ? "改一下这顿" : "记一顿", body, async () => {
+      if (!st.placeId) { toast("选一下吃了哪家"); return; }
+      const id = `${st.date}_${st.slot}`;
+      const data = { date: st.date, slot: st.slot, placeId: st.placeId, decidedBy: st.decidedBy, by: me, at: new Date().toISOString() };
+      const ok = await write(async () => {
+        if (editing && m.id !== id) await db.collection("meals").doc(m.id).delete();
+        await db.collection("meals").doc(id).set(data);
+        const p = places[st.placeId];
+        if (p && !isUnlocked(p)) await db.collection("places").doc(p.id).update({ unlockedAt: data.at });
+      });
+      if (ok) { closeSheet(); lastPick = null; toast(`记下了：${SLOT[st.slot]} · ${places[st.placeId]?.name || ""}`); }
+    });
+  }
+  function defaultSlot(date) {
+    const hr = new Date().getHours();
+    const s = hr < 16 ? "lunch" : hr < 22 ? "dinner" : "late";
+    const d = date || todayStr();
+    if (!meals.some((m) => m.date === d && m.slot === s)) return s;
+    return SLOTS.find((x) => !meals.some((m) => m.date === d && m.slot === x.k))?.k || s;
+  }
+
+  function openPlace(p) {
+    const editing = !!p?.id;
+    const st = { name: p?.name || "", cat: p?.cat || (placeFilter !== "all" ? placeFilter : "zh"), isDefault: !!p?.isDefault, prefHer: p?.prefHer || "", prefHim: p?.prefHim || "" };
+    const nameIn = h("input", { type: "text", id: "p-name", value: st.name, placeholder: "餐厅名字", oninput: (e) => { st.name = e.target.value; } });
+    const catBox = h("div", { class: "chipgrid" });
+    const paintCat = () => catBox.replaceChildren(...CATS.map((c) => h("button", { type: "button", class: "chip", "aria-pressed": String(st.cat === c.k), onclick: () => { st.cat = c.k; paintCat(); } }, `${c.em} ${c.name}`)));
+    paintCat();
+    const prefOpts = [["love", "爱吃"], ["ok", "还行"], ["no", "不想吃"]];
+    const n = editing ? (countsByPlace()[p.id] || 0) : 0;
+    const body = [
+      h("div", { class: "field" }, h("label", { class: "lbl", for: "p-name" }, "名字"), nameIn),
+      h("div", { class: "field" }, h("span", { class: "lbl" }, "分类"), catBox),
+      h("label", { class: "toggle-card toggle-row" }, h("span", {}, "常吃的店", h("small", {}, "平时就会去，不用解锁")),
+        h("span", { class: "switch" }, h("input", { type: "checkbox", id: "p-default", checked: st.isDefault, onchange: (e) => { st.isDefault = e.target.checked; } }), h("i"))),
+      h("div", { class: "field" }, h("span", { class: "lbl" }, "喜好（转盘会照这个来：爱吃的更容易转到，不想吃的不会出现）"),
+        h("div", { class: "pref-row" }, h("span", {}, "她"), segCtl(prefOpts, st.prefHer, (v) => { st.prefHer = v; })),
+        h("div", { class: "pref-row" }, h("span", {}, "他"), segCtl(prefOpts, st.prefHim, (v) => { st.prefHim = v; }))),
+    ];
+    if (editing) body.push(
+      h("p", { class: "muted", style: "margin:0 14px" }, n ? `吃过 ${n} 次，占全部的 ${pct(n, meals.length)}${p.unlockedAt && !p.isDefault ? `，${md(p.unlockedAt.slice(0, 10))}解锁` : ""}` : (isUnlocked(p) ? "还没有记录" : "🔒 还没解锁，第一次去吃就会解锁")),
+      delBtn(async () => { if (await write(() => db.collection("places").doc(p.id).delete())) { closeSheet(); toast("已删除"); } }));
+    showSheet(editing ? "编辑餐厅" : "添加餐厅", body, async () => {
+      const name = st.name.trim();
+      if (!name) { toast("写一下餐厅名字"); return; }
+      const t = new Date().toISOString();
+      const data = { name, cat: st.cat, isDefault: st.isDefault, prefHer: st.prefHer, prefHim: st.prefHim };
+      const ok = await write(() => editing
+        ? db.collection("places").doc(p.id).update({ ...data, updatedAt: t, updatedBy: me })
+        : db.collection("places").add({ ...data, createdAt: t, createdBy: me, unlockedAt: st.isDefault ? t : null }));
+      if (ok) { closeSheet(); toast(editing ? "已更新" : (st.isDefault ? "已添加" : "已添加到待解锁")); }
+    });
+  }
+
+  /* ---------- unlock moment ---------- */
+  const seenUnlock = new Set();
+  let confettiRAF = 0;
+  function celebrate(p) {
+    if (seenUnlock.has(p.id)) return; seenUnlock.add(p.id);
+    const c = cat(p.cat);
+    $("#u-name").textContent = `${c.em} ${p.name}`;
+    $("#u-meta").textContent = `${c.name} · 你们解锁的第 ${placeList().filter(isUnlocked).length} 家`;
+    const u = $("#unlock"); u.hidden = false; u.classList.remove("on");
+    void u.offsetWidth;
+    requestAnimationFrame(() => u.classList.add("on"));
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) setTimeout(confetti, 600);
+    $("#u-ok").focus({ preventScroll: true });
+  }
+  function closeUnlock() {
+    const u = $("#unlock"); u.classList.remove("on"); cancelAnimationFrame(confettiRAF);
+    setTimeout(() => { if (!u.classList.contains("on")) u.hidden = true; }, 300);
+  }
+  $("#u-ok").addEventListener("click", closeUnlock);
+  function confetti() {
+    const cv = $("#confetti"), ctx = cv.getContext("2d");
+    const dpr = Math.min(2, devicePixelRatio || 1);
+    cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; ctx.scale(dpr, dpr);
+    const cs = getComputedStyle(document.documentElement);
+    const cols = ["--gold", "--accent", "--c-xi", "--c-th", "--c-kr", "--c-fast"].map((v) => cs.getPropertyValue(v).trim());
+    const cx = innerWidth / 2, cy = innerHeight / 2 - 60;
+    const ps = Array.from({ length: 140 }, () => {
+      const a = Math.random() * Math.PI * 2, sp = 4 + Math.random() * 9;
+      return { x: cx, y: cy, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 4, r: Math.random() * Math.PI, vr: (Math.random() - .5) * .3, w: 6 + Math.random() * 6, h: 3 + Math.random() * 4, c: cols[(Math.random() * cols.length) | 0], life: 1 };
+    });
+    const step = () => {
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      let alive = 0;
+      for (const p of ps) {
+        p.vy += .22; p.vx *= .985; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life -= .006;
+        if (p.life <= 0 || p.y > innerHeight + 20) continue; alive++;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.globalAlpha = Math.min(1, p.life * 1.5);
+        ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore();
+      }
+      if (alive) confettiRAF = requestAnimationFrame(step); else ctx.clearRect(0, 0, innerWidth, innerHeight);
+    };
+    confettiRAF = requestAnimationFrame(step);
+  }
+
+  /* ---------- wiring ---------- */
+  document.querySelectorAll(".tabs button").forEach((b) => b.addEventListener("click", () => {
+    tab = b.dataset.tab; try { history.replaceState(null, "", "#" + tab); } catch {}
+    render(); scrollTo({ top: 0 });
+  }));
+  $("#add").addEventListener("click", () => tab === "places" ? openPlace(null) : openMeal({ date: tab === "cal" ? selDay : todayStr() }));
+  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => tab === "today" && drawWheel());
+  new MutationObserver(() => tab === "today" && drawWheel()).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  render();
+
+  (async () => {
+    const c = window.claude;
+    const notice = (msg) => { const n = $("#notice"); n.textContent = msg; n.hidden = false; };
+    if (!c?.use) { loaded = { places: true, meals: true }; notice("在 Claude 里打开这个页面，才能保存和同步。"); render(); return; }
+    const [d, user] = await Promise.all([c.use("db"), c.use("user")]);
+    db = d;
+    if (user) {
+      me = await user.id();
+      myRole = (await user.isOwner()) ? "her" : "him";
+      if ((await user.can("data.write")) === false) { readOnly = true; notice("你现在只能查看。想一起记录，请让她在“分享”里把你设为“编辑者”。"); }
+    }
+    if (!db) { loaded = { places: true, meals: true }; notice("没连上存储：请先登录 Claude 再打开。"); render(); return; }
+    let first = true;
+    db.collection("places").onSnapshot((snap) => {
+      const next = {};
+      for (const doc of snap.docs) next[doc.id] = { id: doc.id, ...doc.data() };
+      if (!first) for (const p of Object.values(next)) {
+        const prev = places[p.id];
+        if (prev && !isUnlocked(prev) && isUnlocked(p) && !p.isDefault) setTimeout(() => celebrate(p), 350);
+      }
+      first = false; places = next; loaded.places = true;
+      if (!spinning) render();
+    }, () => notice("同步中断了，刷新一下页面。"));
+    db.collection("meals").onSnapshot((snap) => {
+      meals = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })).filter((m) => m.date);
+      loaded.meals = true;
+      if (!spinning) render();
+    }, () => notice("同步中断了，刷新一下页面。"));
+  })();
+})();
+</script>
